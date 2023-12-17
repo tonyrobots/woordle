@@ -1,0 +1,66 @@
+#gameContainer {
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+}
+
+#grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Space between rows */
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+  gap: 5px; /* Space between cells */
+}
+
+.cell {
+  width: 50px; /* Width of each cell */
+  height: 50px; /* Height of each cell */
+  border: 2px solid #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px; /* Adjust as needed */
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.correct {
+  background-color: green;
+  color: white;
+}
+
+.present {
+  background-color: #ffc425;
+  color: white;
+}
+
+.incorrect {
+  background-color: grey;
+  color: white;
+}
+
+#inputArea {
+  margin-top: 20px;
+}
+
+#userInput {
+  padding: 10px;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+#submitGuess {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+#gameMessage {
+  margin-top: 20px;
+  font-size: 20px;
+  color: #333;
+  /* Add more styling as needed */
+}
