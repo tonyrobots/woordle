@@ -20,7 +20,7 @@
 .cell {
   width: 50px; /* Width of each cell */
   height: 50px; /* Height of each cell */
-  border: 2px solid #000;
+  border: 2px solid #777;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,6 +32,10 @@
   transform-style: preserve-3d;
 }
 
+.cell-focused {
+  outline: 2px solid lightgreen;
+  outline-offset: -2px;
+}
 .correct {
   background-color: rgb(75, 164, 75);
   color: white;
@@ -43,7 +47,7 @@
 }
 
 .incorrect {
-  background-color: #aaa;
+  background-color: #999;
   color: white;
 }
 
@@ -73,7 +77,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 1px 0;
+  padding: 3px 2px;
   /* box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2); */
   background-color: #f1f1f1; /* Optional: background color for the keyboard */
 }
@@ -85,7 +89,7 @@
 }
 
 .key {
-  font-size: 1.15em;
+  font-size: 1.5em;
   font-weight: bold;
   border: 0;
   padding: 0;
@@ -105,6 +109,10 @@
   text-transform: uppercase;
 }
 
+.key.enter {
+  font-size: 1em;
+}
+
 .key:active {
   background-color: #999; /* Darker color on key press */
   transform: scale(0.95); /* Slightly shrink key when pressed */
@@ -118,7 +126,23 @@
   background-color: #c9a33c;
 }
 .incorrect {
-  background-color: #aaa;
+  background-color: #999;
+}
+/* .bef {
+  background-color: #aaa6f4;
+}
+.aft {
+  background-color: #eb8b62;
+} */
+
+.possible {
+  background-color: rgb(75, 164, 75);
+  color: white;
+}
+
+.impossible {
+  background-color: #777;
+  color: #666;
 }
 
 /* animation stuff */
@@ -132,7 +156,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #000;
+  /* border: 1px solid #000; */
   font-size: 24px;
   font-weight: bold;
   text-transform: uppercase;
@@ -141,8 +165,46 @@
 
 .cell .back {
   transform: rotateX(180deg);
+  min-width: 30px; /* Example minimum width */
+  min-height: 30px; /* Example minimum height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative; /* Ensure proper positioning of pseudo-elements */
+  /* Other styles */
+}
+/* new attempt */
+.cell .back.bef {
+  background-color: #aaa6f4; /* Example background color for 'bef' */
 }
 
+.cell .back.aft {
+  background-color: #eb8b62; /* Example background color for 'aft' */
+}
+
+/* Guessed letter comes before the answer letter */
+.cell .back.bef::after {
+  content: "→"; /* Dot for 'bef' */
+  position: absolute;
+  top: 80%;
+  /* right: 5px; Adjust as needed */
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.5); /* White with 50% opacity */
+  font-size: 0.8em; /* Adjust the size as needed */
+  z-index: 100;
+}
+
+.cell .back.aft::before {
+  content: "←"; /* Dot for 'aft' */
+  position: absolute;
+  top: 80%;
+  /* left: 5px; Adjust as needed */
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.5); /* White with 50% opacity */
+  font-size: 0.8em; /* Adjust the size as needed */
+  z-index: 100;
+}
+/* end new attempt*/
 .flip {
   transition: transform 0.33s;
   transform: rotateX(180deg);
@@ -176,4 +238,14 @@
   90% {
     opacity: 1;
   }
+}
+
+/*  GT LT variant */
+.overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(255, 255, 255, 0.7); /* Translucent white */
+  font-size: 2em; /* Adjust size as needed */
 }
