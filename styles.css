@@ -28,20 +28,22 @@
   font-weight: bold;
   text-transform: uppercase;
   font-family: "Roboto", sans-serif;
+  perspective: 1000px;
+  transform-style: preserve-3d;
 }
 
 .correct {
-  background-color: green;
+  background-color: rgb(75, 164, 75);
   color: white;
 }
 
 .present {
-  background-color: #d09800;
+  background-color: #c9a33c;
   color: white;
 }
 
 .incorrect {
-  background-color: grey;
+  background-color: rgb(99, 94, 94);
   color: white;
 }
 
@@ -88,11 +90,38 @@
 
 /* Add classes for different letter statuses: correct, present, incorrect */
 .correct {
-  background-color: green;
+  background-color: rgb(75, 164, 75);
 }
 .present {
-  background-color: #d09800;
+  background-color: #c9a33c;
 }
 .incorrect {
-  background-color: grey;
+  background-color: rgb(99, 94, 94);
+}
+
+/* animation stuff */
+/* Front and back face styling */
+.cell .front,
+.cell .back {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  backface-visibility: hidden; /* Hide the back side of the flipped tile */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #000;
+  font-size: 24px;
+  font-weight: bold;
+  text-transform: uppercase;
+  backface-visibility: hidden;
+}
+
+.cell .back {
+  transform: rotateX(180deg);
+}
+
+.flip {
+  transition: transform 0.33s;
+  transform: rotateX(180deg);
 }

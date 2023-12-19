@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const maxAttempts = 8;
   let currentInput = "";
   let gameOver = false; //  variable to track game state
+  createGrid();
 
   fetch("wordlist.txt")
     .then((response) => response.text())
@@ -48,11 +49,16 @@ document.addEventListener("DOMContentLoaded", () => {
     for (let i = 0; i < maxAttempts; i++) {
       for (let j = 0; j < 6; j++) {
         const cell = document.getElementById(`cell${i}-${j}`);
-        cell.textContent = "";
-        cell.classList.remove("correct", "present", "incorrect");
+        const front = cell.querySelector(".front");
+        const back = cell.querySelector(".back");
+
+        front.textContent = "";
+        back.textContent = "";
+        back.className = "back"; // Reset classes
+
+        cell.classList.remove("flip", "correct", "present", "incorrect");
       }
     }
-    document.getElementById("gameMessage").textContent = "";
   }
 
   function clearKeyboard() {
@@ -104,8 +110,19 @@ document.addEventListener("DOMContentLoaded", () => {
     for (let i = 0; i < 6; i++) {
       const cellId = `cell${currentAttempt}-${i}`;
       const cell = document.getElementById(cellId);
-      cell.textContent = currentInput[i] || "";
-      cell.classList.remove("correct", "present", "incorrect");
+
+      if (cell) {
+        const front = cell.querySelector(".front");
+        if (front) {
+          front.textContent = currentInput[i] || "";
+        } else {
+          console.error(`Front not found in cell ${cellId}`);
+        }
+
+        // Do not remove classes here; they should be handled in updateGridStatus
+      } else {
+        console.error(`Cell not found: ${cellId}`);
+      }
     }
   }
 
@@ -148,6 +165,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       updateGridStatus(guess, statusMap);
 
+      // After determining the status of each letter
+      for (let i = 0; i < 6; i++) {
+        updateKeyboardStatus(guess[i], statusMap[i] || "incorrect");
+      }
+
       currentAttempt++;
       if (currentAttempt === maxAttempts) {
         displayMessage(`Game over! The word was ${targetWord}.`);
@@ -157,18 +179,21 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateGridStatus(guess, statusMap) {
-    // for (let i = 0; i < 6; i++) {
-    //   const cell = document.getElementById(`cell${currentAttempt}-${i}`);
-    //   cell.textContent = guess[i];
-    //   cell.classList.add(statusMap[guess[i]] || "incorrect");
-    //   updateKeyboardStatus(guess[i], statusMap[guess[i]] || "incorrect");
-    // }
     for (let i = 0; i < 6; i++) {
       const cell = document.getElementById(`cell${currentAttempt}-${i}`);
-      cell.textContent = guess[i];
-      const status = statusMap[i] || "incorrect";
-      cell.classList.add(status);
-      updateKeyboardStatus(guess[i], status);
+      const back = cell.querySelector(".back");
+
+      if (back) {
+        back.textContent = guess[i]; // Set letter on back side
+        back.classList.add(statusMap[i] || "incorrect");
+
+        // Trigger the flip animation
+        setTimeout(() => {
+          cell.classList.add("flip");
+        }, i * 100); // Delay for cascading effect
+      } else {
+        console.error(`Back not found in cell ${i}`);
+      }
     }
   }
 
@@ -189,5 +214,33 @@ document.addEventListener("DOMContentLoaded", () => {
       replacement +
       string.substr(index + replacement.length)
     );
+  }
+
+  function createGrid() {
+    const gridContainer = document.getElementById("grid");
+    gridContainer.innerHTML = ""; // Clear existing grid if any
+
+    for (let row = 0; row < maxAttempts; row++) {
+      const rowDiv = document.createElement("div");
+      rowDiv.className = "row";
+
+      for (let col = 0; col < 6; col++) {
+        const cellDiv = document.createElement("div");
+        cellDiv.className = "cell";
+        cellDiv.id = `cell${row}-${col}`;
+
+        const frontDiv = document.createElement("div");
+        frontDiv.className = "front";
+
+        const backDiv = document.createElement("div");
+        backDiv.className = "back";
+
+        cellDiv.appendChild(frontDiv);
+        cellDiv.appendChild(backDiv);
+        rowDiv.appendChild(cellDiv);
+      }
+
+      gridContainer.appendChild(rowDiv);
+    }
   }
 });
