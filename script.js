@@ -1,5 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
   let wordList = [];
+  let targetWord = "";
+  let currentAttempt = 0;
+  const maxAttempts = 8;
+  let currentInput = "";
+  let gameOver = false; //  variable to track game state
+
   fetch("wordlist.txt")
     .then((response) => response.text())
     .then((text) => {
@@ -8,49 +14,93 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .catch((err) => console.error("Failed to load word list:", err));
 
-  const targetWord = getRandomWord().toUpperCase();
-  let currentAttempt = 0;
-  const maxAttempts = 8;
-  let currentInput = "";
+  // Load valid guesses list
+  fetch("validguesses.txt")
+    .then((response) => response.text())
+    .then((text) => {
+      validGuesses = text.split("\n").map((word) => word.trim().toUpperCase());
+    })
+    .catch((err) => console.error("Failed to load valid guesses list:", err));
 
   document.addEventListener("keydown", handleKeyPress);
-
-  document.getElementById("submitGuess").addEventListener("click", () => {
-    const guess = document.getElementById("userInput").value.toUpperCase();
-    if (guess.length === 6) {
-      submitGuess(guess);
-      document.getElementById("userInput").value = ""; // Clear the input field after each guess
-    } else {
-      alert("Please enter a 6 letter word");
-    }
+  document.querySelectorAll(".key").forEach((key) => {
+    key.addEventListener("click", () => handleKeyClick(key.textContent));
   });
 
+  function startGame() {
+    currentAttempt = 0;
+    currentInput = "";
+    targetWord = getRandomWord();
+    console.log(targetWord);
+    clearGrid();
+    clearKeyboard();
+    // Additional initialization logic can go here
+    gameOver = false; // Reset game state when starting a new game
+  }
+
   function getRandomWord() {
-    if (wordList.length === 0) {
-      return "WHOOPS"; // Fallback word in case the list fails to load
+    return wordList.length > 0
+      ? wordList[Math.floor(Math.random() * wordList.length)]
+      : "WHOOPS";
+  }
+
+  function clearGrid() {
+    for (let i = 0; i < maxAttempts; i++) {
+      for (let j = 0; j < 6; j++) {
+        const cell = document.getElementById(`cell${i}-${j}`);
+        cell.textContent = "";
+        cell.classList.remove("correct", "present", "incorrect");
+      }
     }
-    return wordList[Math.floor(Math.random() * wordList.length)];
+    document.getElementById("gameMessage").textContent = "";
+  }
+
+  function clearKeyboard() {
+    document.querySelectorAll(".key").forEach((key) => {
+      key.classList.remove("correct", "present", "incorrect");
+    });
   }
 
   function handleKeyPress(e) {
-    if (currentAttempt < maxAttempts) {
-      if (e.key.match(/^[a-z]$/i) && currentInput.length < 6) {
-        // Add letter to current input
-        currentInput += e.key.toUpperCase();
-        updateGrid();
-      } else if (e.key === "Backspace") {
-        // Remove last letter from current input
-        currentInput = currentInput.slice(0, -1);
-        updateGrid();
-      } else if (e.key === "Enter" && currentInput.length === 6) {
-        submitGuess(currentInput);
-        currentInput = ""; // Reset current input
-      }
+    // Ignore clicks if game is over
+    if (gameOver) {
+      return;
+    }
+    if (
+      currentAttempt < maxAttempts &&
+      e.key.match(/^[a-z]$/i) &&
+      currentInput.length < 6
+    ) {
+      currentInput += e.key.toUpperCase();
+      updateGrid();
+    } else if (e.key === "Backspace") {
+      currentInput = currentInput.slice(0, -1);
+      updateGrid();
+    } else if (e.key === "Enter" && currentInput.length === 6) {
+      submitGuess(currentInput);
+      currentInput = "";
     }
   }
 
+  function handleKeyClick(keyValue) {
+    // Ignore clicks if game is over
+    if (gameOver) {
+      return;
+    }
+    if (keyValue === "⌫") {
+      currentInput = currentInput.slice(0, -1);
+    } else if (keyValue === "Enter") {
+      if (currentInput.length === 6) {
+        submitGuess(currentInput);
+        currentInput = "";
+      }
+    } else if (currentInput.length < 6) {
+      currentInput += keyValue;
+    }
+    updateGrid();
+  }
+
   function updateGrid() {
-    // Update the current row based on currentInput
     for (let i = 0; i < 6; i++) {
       const cellId = `cell${currentAttempt}-${i}`;
       const cell = document.getElementById(cellId);
@@ -59,55 +109,85 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function displayMessage(message) {
-    const messageElement = document.getElementById("gameMessage");
-    messageElement.textContent = message;
-  }
   function submitGuess(guess) {
-    if (currentAttempt < maxAttempts) {
-      let targetWordCopy = targetWord; // Copy of the target word for tracking letters
+    if (!gameOver && currentAttempt < maxAttempts) {
+      let statusMap = {};
+      let targetWordCopy = targetWord;
+      let correctCount = 0;
 
-      // First pass: mark correct letters
+      // First pass: Mark correct letters
       for (let i = 0; i < 6; i++) {
-        const letter = guess[i];
-        const cellId = `cell${currentAttempt}-${i}`;
-        const cell = document.getElementById(cellId);
-        cell.textContent = letter;
-
-        if (targetWord[i] === letter) {
-          cell.classList.add("correct");
-          // Replace the letter in the copy with a placeholder to avoid double marking
-          targetWordCopy = targetWordCopy.replace(letter, "_");
+        if (guess[i] === targetWord[i]) {
+          statusMap[i] = "correct";
+          targetWordCopy = replaceAt(targetWordCopy, i, "_");
+          correctCount++;
         }
       }
 
-      // Second pass: mark present letters
-      for (let i = 0; i < 6; i++) {
-        const letter = guess[i];
-        const cellId = `cell${currentAttempt}-${i}`;
-        const cell = document.getElementById(cellId);
+      // Win condition
+      if (correctCount === 6) {
+        updateGridStatus(guess, statusMap);
+        displayMessage("Congratulations! You guessed the word!");
+        gameOver = true; // Set gameOver to true when the game ends
+        return;
+      }
 
-        if (!cell.classList.contains("correct")) {
-          if (targetWordCopy.includes(letter)) {
-            cell.classList.add("present");
-            // Replace the first occurrence of the letter in the copy with a placeholder
-            targetWordCopy = targetWordCopy.replace(letter, "_");
+      // Second pass: Mark present and incorrect letters
+      for (let i = 0; i < 6; i++) {
+        if (!statusMap[i]) {
+          if (targetWordCopy.includes(guess[i])) {
+            statusMap[i] = "present";
+            // targetWordCopy = targetWordCopy.replace(guess[i], "_");
+            let indexOfLetter = targetWordCopy.indexOf(guess[i]);
+            targetWordCopy = replaceAt(targetWordCopy, indexOfLetter, "_");
           } else {
-            cell.classList.add("incorrect");
+            statusMap[i] = "incorrect";
           }
         }
       }
 
-      if (guess === targetWord) {
-        displayMessage("Congratulations! You guessed the word!");
-        return;
-      }
+      updateGridStatus(guess, statusMap);
 
       currentAttempt++;
+      if (currentAttempt === maxAttempts) {
+        displayMessage(`Game over! The word was ${targetWord}.`);
+        gameOver = true; // Set gameOver to true when the game ends
+      }
     }
+  }
 
-    if (currentAttempt === maxAttempts) {
-      displayMessage(`Game over! The word was ${targetWord}.`);
+  function updateGridStatus(guess, statusMap) {
+    // for (let i = 0; i < 6; i++) {
+    //   const cell = document.getElementById(`cell${currentAttempt}-${i}`);
+    //   cell.textContent = guess[i];
+    //   cell.classList.add(statusMap[guess[i]] || "incorrect");
+    //   updateKeyboardStatus(guess[i], statusMap[guess[i]] || "incorrect");
+    // }
+    for (let i = 0; i < 6; i++) {
+      const cell = document.getElementById(`cell${currentAttempt}-${i}`);
+      cell.textContent = guess[i];
+      const status = statusMap[i] || "incorrect";
+      cell.classList.add(status);
+      updateKeyboardStatus(guess[i], status);
     }
+  }
+
+  function updateKeyboardStatus(letter, status) {
+    const keyElement = document.getElementById(`key-${letter}`);
+    if (keyElement && !keyElement.classList.contains("correct")) {
+      keyElement.classList.add(status);
+    }
+  }
+
+  function displayMessage(message) {
+    const messageElement = document.getElementById("gameMessage");
+    messageElement.textContent = message;
+  }
+  function replaceAt(string, index, replacement) {
+    return (
+      string.substr(0, index) +
+      replacement +
+      string.substr(index + replacement.length)
+    );
   }
 });

@@ -2,6 +2,7 @@
   max-width: 600px;
   margin: auto;
   text-align: center;
+  font-family: "Roboto", sans-serif;
 }
 
 #grid {
@@ -26,6 +27,7 @@
   font-size: 24px; /* Adjust as needed */
   font-weight: bold;
   text-transform: uppercase;
+  font-family: "Roboto", sans-serif;
 }
 
 .correct {
@@ -34,7 +36,7 @@
 }
 
 .present {
-  background-color: #ffc425;
+  background-color: #d09800;
   color: white;
 }
 
@@ -63,4 +65,34 @@
   font-size: 20px;
   color: #333;
   /* Add more styling as needed */
+}
+#keyboard {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+.key {
+  padding: 5px 10px;
+  margin: 0 3px;
+  border: 1px solid #000;
+  background-color: #fff;
+  cursor: pointer;
+  /* Add more styling as needed */
+}
+
+/* Add classes for different letter statuses: correct, present, incorrect */
+.correct {
+  background-color: green;
+}
+.present {
+  background-color: #d09800;
+}
+.incorrect {
+  background-color: grey;
 }
