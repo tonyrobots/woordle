@@ -151,6 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (correctCount === 6) {
         updateGridStatus(guess, statusMap);
         displayMessage("Congratulations! You guessed the word!");
+        triggerConfetti();
         gameOver = true; // Set gameOver to true when the game ends
         return;
       }
@@ -256,5 +257,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       gridContainer.appendChild(rowDiv);
     }
+  }
+  function triggerConfetti() {
+    confetti({
+      particleCount: 200,
+      spread: 80,
+      origin: { y: 0.6 },
+    });
   }
 });
