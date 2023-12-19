@@ -132,6 +132,12 @@ document.addEventListener("DOMContentLoaded", () => {
       let targetWordCopy = targetWord;
       let correctCount = 0;
 
+      // Check if the guess is a valid word
+      //   if (!validGuesses.includes(guess)) {
+      //     displayMessage("Not a valid word");
+      //     return; // Do not proceed further
+      //   }
+
       // First pass: Mark correct letters
       for (let i = 0; i < 6; i++) {
         if (guess[i] === targetWord[i]) {
@@ -207,7 +213,15 @@ document.addEventListener("DOMContentLoaded", () => {
   function displayMessage(message) {
     const messageElement = document.getElementById("gameMessage");
     messageElement.textContent = message;
+    messageElement.style.display = "block"; // Make the bubble visible
+    messageElement.style.animation = "fadeInOut 3s";
+
+    // Hide the message after the animation is complete
+    setTimeout(() => {
+      messageElement.style.display = "none";
+    }, 3000); // This should match the duration of the animation
   }
+
   function replaceAt(string, index, replacement) {
     return (
       string.substr(0, index) +
