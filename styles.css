@@ -8,13 +8,13 @@
 #grid {
   display: flex;
   flex-direction: column;
-  gap: 10px; /* Space between rows */
+  gap: 7px; /* Space between rows */
 }
 
 .row {
   display: flex;
   justify-content: center;
-  gap: 5px; /* Space between cells */
+  gap: 7px; /* Space between cells */
 }
 
 .cell {
@@ -43,7 +43,7 @@
 }
 
 .incorrect {
-  background-color: rgb(99, 94, 94);
+  background-color: #aaa;
   color: white;
 }
 
@@ -118,7 +118,7 @@
   background-color: #c9a33c;
 }
 .incorrect {
-  background-color: rgb(99, 94, 94);
+  background-color: #aaa;
 }
 
 /* animation stuff */
