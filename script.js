@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   // set variant here
-  //   let variant = "standard";
-  variant = "gt-lt";
+  let variant = "standard";
+  //   variant = "gt-lt";
   //   variant = "6-letter";
 
   let wordList = [];
@@ -242,7 +242,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         // After determining the status of each letter
         for (let i = 0; i < letterCount; i++) {
-          updateKeyboardStatus(guess[i], statusMap[i] || "incorrect");
+          //   updateKeyboardStatus(guess[i], statusMap[i] || "incorrect");
+          updateKeyboardStatus(guess[i], statusMap[i]);
         }
       }
       // Win condition
@@ -341,6 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
   function updateKeyboardForLetterPosition(currentPosition) {
+    if (feedbackStyle !== "alphabetical") return;
     const currentRange = letterRanges[currentPosition];
     document.querySelectorAll(".key").forEach((keyElement) => {
       const letter = keyElement.textContent; // or keyElement.getAttribute('data-letter') if you use data attributes
@@ -452,7 +454,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function generateKeyboardLayout() {
     let layout;
-    if (feedbackStyle === "alphabetical") {
+    if (feedbackStyle === "xxx") {
+      //todo update with separate keyboard style variant option
       layout = alphabeticalKeyboardLayout;
     } else {
       layout = standardKeyboardLayout;
