@@ -1,8 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // set variant here
-  let variant = "standard";
-  //   variant = "gt-lt";
-  //   variant = "6-letter";
+  const urlParams = new URLSearchParams(window.location.search);
+  const gameVariant = urlParams.get("v");
+  // 1 = standard
+  // 2 = alphabetical
+  // 3 = 6-letter
+
+  if (gameVariant) {
+    if (gameVariant === "1") {
+      variant = "standard";
+    } else if (gameVariant === "2") {
+      variant = "gt-lt";
+    } else if (gameVariant === "3") {
+      variant = "6-letter";
+    }
+  } else {
+    // set variant here
+    //   let variant = "standard";
+    variant = "gt-lt";
+    //   variant = "6-letter";
+  }
 
   let wordList = [];
   let targetWord = "";
@@ -17,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let maxAttempts = 6;
   let letterCount = 5;
   let feedbackStyle = "standard";
-  let name = "Wordlish";
+  let name = "Just another wordle clone";
   let requireValidGuesses = true;
 
   // override with variant settings
@@ -36,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .map(() => ({ min: "@", max: "[" })); // set min and max outside the A-Z range
 
   document.title = name + " - a Wordle Variant";
-  document.getElementById("gameName").textContent = name;
+  document.getElementById("gameName").textContent = name.toUpperCase();
 
   createGrid();
   generateKeyboardLayout();
@@ -72,6 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // console.log(targetWord);
     clearGrid();
     clearKeyboard();
+
     // Additional initialization logic can go here
     gameOver = false; // Reset game state when starting a new game
   }
@@ -96,6 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
         cell.classList.remove("flip", "correct", "present", "incorrect");
       }
     }
+    document.getElementById("playAgain").innerHTML = "";
   }
 
   function clearKeyboard() {
@@ -253,8 +271,8 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
           displayMessage("Woohoo!");
           triggerConfetti();
+          endGame();
         }, 1000);
-        gameOver = true; // Set gameOver to true when the game ends
         return;
       }
       updateGridStatus(guess, statusMap);
@@ -421,6 +439,15 @@ document.addEventListener("DOMContentLoaded", () => {
       replacement +
       string.substr(index + replacement.length)
     );
+  }
+
+  function endGame() {
+    // add link to play again
+    gameOver = true; // Set gameOver to true when the game ends
+
+    document.getElementById(
+      "playAgain"
+    ).innerHTML = `<a href="index.html">Play Again</a>`;
   }
 
   function createGrid() {

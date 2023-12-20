@@ -1,4 +1,5 @@
 fix keyboard status for standard feedback version
 add share
 add play again
-add ability to select variant
+add ability to select variant (partially done)
+spacebar or arrowkeys to move "cursor" focus

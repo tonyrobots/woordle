@@ -82,6 +82,13 @@
   background-color: #f1f1f1; /* Optional: background color for the keyboard */
 }
 
+#playAgain {
+  padding: 10px 20px;
+  font-size: 12px;
+  color: #00ab61;
+  cursor: pointer;
+}
+
 .keyboard-row {
   display: flex;
   justify-content: center;
