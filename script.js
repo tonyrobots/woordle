@@ -126,24 +126,26 @@ document.addEventListener("DOMContentLoaded", () => {
       if (focusCellIndex < letterCount - 1) {
         updateFocus(focusCellIndex + 1);
       }
-      //   console.log(currentInput);
       updateGrid();
     } else if (e.key === "Backspace") {
-      //   currentInput = currentInput.slice(0, -1);
-      //   getFocusedCell().querySelector(".front").textContent = "";
       // Convert the currentInput string to an array for easy manipulation
       let inputArray = currentInput.split("");
 
-      // Remove the character at the focus position
-      //   inputArray.splice(focusCellIndex - 1, 1);
-      inputArray[focusCellIndex] = " ";
+      // if current focus cell is empty, just move focus to the previous cell
+      if (
+        inputArray[focusCellIndex] === " " ||
+        inputArray[focusCellIndex] === undefined
+      ) {
+        updateFocus(Math.max(0, focusCellIndex - 1));
+      }
+      if (inputArray[focusCellIndex] !== " ") {
+        // if current focus cell is not empty, delete the current cell and don't move focus
+        inputArray[focusCellIndex] = " ";
+      }
 
       // Convert the array back to a string
       currentInput = inputArray.join("");
 
-      if (true) {
-        updateFocus(Math.max(0, focusCellIndex - 1));
-      }
       updateGrid();
     } else if (e.key === "Enter" && currentInput.length === letterCount) {
       submitGuess(currentInput);
@@ -195,6 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!validGuesses.includes(guess)) {
         displayMessage("Not a valid word");
         // console.log("Guess: " + guess + " is not a valid word");
+        updateFocus(0);
         return; // Do not proceed further
       }
 
