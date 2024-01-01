@@ -23,7 +23,8 @@ document.addEventListener("DOMContentLoaded", () => {
     variant = "alpha";
     //   variant = "6-letter";
   }
-
+  const standardKeyboardLayout = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
+  const alphabeticalKeyboardLayout = ["ABCDEFGHIJ", "KLMNOPQRS", "TUVWXYZ"];
   let wordList = [];
   let validGuesses = [];
   let targetWord = "";
@@ -59,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("gameName").textContent = name.toUpperCase();
 
   createGrid(letterCount, maxAttempts);
-  Ui.generateKeyboardLayout();
+  generateKeyboardLayout();
 
   // load wordlist_{letterCount}.txt
   fetch("wordlists/wordlist_" + letterCount + ".txt")
@@ -491,6 +492,54 @@ document.addEventListener("DOMContentLoaded", () => {
 
       gridContainer.appendChild(rowDiv);
     }
+  }
+
+  function generateKeyboardLayout(feedbackStyle = "standard") {
+    let layout;
+    if (feedbackStyle === "alphabetic") {
+      //todo update with separate keyboard style variant option
+      layout = alphabeticalKeyboardLayout;
+    } else {
+      layout = standardKeyboardLayout;
+    }
+
+    const keyboardContainer = document.getElementById("keyboard");
+    keyboardContainer.innerHTML = ""; // Clear existing keyboard
+
+    layout.forEach((row, rowIndex) => {
+      const rowDiv = document.createElement("div");
+      rowDiv.className = "keyboard-row";
+
+      // Add "Enter" at the start of the third row
+      if (rowIndex === 2) {
+        const enterKey = document.createElement("button");
+        enterKey.className = "key enter";
+        enterKey.textContent = "Enter";
+        enterKey.id = "key-Enter";
+        enterKey.addEventListener("click", () => handleKeyClick("Enter"));
+        rowDiv.appendChild(enterKey);
+      }
+
+      row.split("").forEach((key) => {
+        const keyButton = document.createElement("button");
+        keyButton.className = "key";
+        keyButton.textContent = key;
+        keyButton.id = `key-${key}`;
+        keyButton.addEventListener("click", () => handleKeyClick(key));
+        rowDiv.appendChild(keyButton);
+      });
+
+      // Add "Backspace" at the end of the last row
+      if (rowIndex === layout.length - 1) {
+        const backspaceKey = document.createElement("button");
+        backspaceKey.className = "key backspace";
+        backspaceKey.textContent = "⌫";
+        backspaceKey.id = "key-Backspace";
+        backspaceKey.addEventListener("click", () => handleKeyClick("⌫"));
+        rowDiv.appendChild(backspaceKey);
+      }
+      keyboardContainer.appendChild(rowDiv);
+    });
   }
 
   function getWordFromUrl() {
