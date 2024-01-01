@@ -1,5 +1,9 @@
+import { generateResultText } from "./share.js";
+import * as Ui from "./uiHandling.js";
+
 document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
+  let variant = "standard";
   const gameVariant = urlParams.get("v");
   // 1 = standard
   // 2 = alphabetical
@@ -9,25 +13,26 @@ document.addEventListener("DOMContentLoaded", () => {
     if (gameVariant === "1") {
       variant = "standard";
     } else if (gameVariant === "2") {
-      variant = "gt-lt";
+      variant = "alpha";
     } else if (gameVariant === "3") {
       variant = "6-letter";
     }
   } else {
     // set variant here
     //   let variant = "standard";
-    variant = "gt-lt";
+    variant = "alpha";
     //   variant = "6-letter";
   }
 
   let wordList = [];
+  let validGuesses = [];
   let targetWord = "";
   let currentAttempt = 0;
   let currentInput = "";
   let focusCellIndex = 0;
+  let statusMapHistory = [];
+  let guesses = [];
   let gameOver = false; //  variable to track game state
-  const standardKeyboardLayout = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
-  const alphabeticalKeyboardLayout = ["ABCDEFGHIJ", "KLMNOPQRS", "TUVWXYZ"];
 
   // set standard settings
   let maxAttempts = 6;
@@ -37,14 +42,13 @@ document.addEventListener("DOMContentLoaded", () => {
   let requireValidGuesses = true;
 
   // override with variant settings
-  if (variant === "gt-lt") {
+  if (variant === "alpha") {
     feedbackStyle = "alphabetical";
     name = "Wordlish";
   } else if (variant === "6-letter") {
     maxAttempts = 8;
     letterCount = 6;
     name = "Woordle";
-    let requireValudGuesses = false;
   }
 
   let letterRanges = Array(letterCount)
@@ -54,8 +58,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.title = name + " - a Wordle Variant";
   document.getElementById("gameName").textContent = name.toUpperCase();
 
-  createGrid();
-  generateKeyboardLayout();
+  createGrid(letterCount, maxAttempts);
+  Ui.generateKeyboardLayout();
 
   // load wordlist_{letterCount}.txt
   fetch("wordlists/wordlist_" + letterCount + ".txt")
@@ -84,7 +88,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function startGame() {
     currentAttempt = 0;
     currentInput = "";
-    targetWord = getRandomWord();
+
+    if (getWordFromUrl()) {
+      targetWord = getWordFromUrl().toUpperCase();
+    } else {
+      targetWord = getRandomWord();
+    }
     // console.log(targetWord);
     clearGrid();
     clearKeyboard();
@@ -213,11 +222,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
       //   Check if the guess is a valid word
       if (!validGuesses.includes(guess)) {
-        displayMessage("Not a valid word");
+        Ui.displayMessage("Not a valid word");
         // console.log("Guess: " + guess + " is not a valid word");
         updateFocus(0);
         return; // Do not proceed further
       }
+
+      // add guess to guesses array
+      guesses.push(guess);
 
       if (feedbackStyle === "alphabetical") {
         // Alphabetical variant logic
@@ -264,13 +276,16 @@ document.addEventListener("DOMContentLoaded", () => {
           updateKeyboardStatus(guess[i], statusMap[i]);
         }
       }
+
+      statusMapHistory.push(statusMap);
+
       // Win condition
       if (correctCount === letterCount) {
         updateGridStatus(guess, statusMap);
         // Set timeout for confetti to trigger after flip animations
         setTimeout(() => {
-          displayMessage("Woohoo!");
-          triggerConfetti();
+          Ui.displayMessage("Woohoo!");
+          Ui.triggerConfetti();
           endGame();
         }, 1000);
         return;
@@ -279,7 +294,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       currentAttempt++;
       if (currentAttempt === maxAttempts) {
-        displayMessage(`Game over! The word was ${targetWord}.`);
+        Ui.displayMessage(`Game over! The word was ${targetWord}.`);
         gameOver = true; // Set gameOver to true when the game ends
       }
       updateFocus(0); // back to the beginning
@@ -421,18 +436,6 @@ document.addEventListener("DOMContentLoaded", () => {
     updateKeyboardForLetterPosition(focusCellIndex);
   }
 
-  function displayMessage(message) {
-    const messageElement = document.getElementById("gameMessage");
-    messageElement.textContent = message;
-    messageElement.style.display = "block"; // Make the bubble visible
-    messageElement.style.animation = "fadeInOut 3s";
-
-    // Hide the message after the animation is complete
-    setTimeout(() => {
-      messageElement.style.display = "none";
-    }, 3000); // This should match the duration of the animation
-  }
-
   function replaceAt(string, index, replacement) {
     return (
       string.substr(0, index) +
@@ -442,15 +445,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function endGame() {
-    // add link to play again
     gameOver = true; // Set gameOver to true when the game ends
+
+    setTimeout(() => {
+      showResultModal(
+        // `${statusMapHistory.length}/${maxAttempts}`,
+        `You found the word ${targetWord} in ${statusMapHistory.length} guesses!`,
+        guesses,
+        variant
+      );
+    }, 2000);
+
+    // add link to play again
+    const gameUrl = window.location.href.split("?")[0]; // Base URL
 
     document.getElementById(
       "playAgain"
-    ).innerHTML = `<a href="index.html">Play Again</a>`;
+    ).innerHTML = `<a href="gameUrl">Play Again</a>`;
   }
 
-  function createGrid() {
+  function createGrid(letterCount, maxAttempts) {
     const gridContainer = document.getElementById("grid");
     gridContainer.innerHTML = ""; // Clear existing grid if any
 
@@ -479,61 +493,48 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function generateKeyboardLayout() {
-    let layout;
-    if (feedbackStyle === "xxx") {
-      //todo update with separate keyboard style variant option
-      layout = alphabeticalKeyboardLayout;
-    } else {
-      layout = standardKeyboardLayout;
+  function getWordFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const encodedWord = urlParams.get("w");
+    if (encodedWord) {
+      return atob(encodedWord); // Decode from Base64
     }
-
-    const keyboardContainer = document.getElementById("keyboard");
-    keyboardContainer.innerHTML = ""; // Clear existing keyboard
-
-    layout.forEach((row, rowIndex) => {
-      const rowDiv = document.createElement("div");
-      rowDiv.className = "keyboard-row";
-
-      // Add "Enter" at the start of the third row
-      if (rowIndex === 2) {
-        const enterKey = document.createElement("button");
-        enterKey.className = "key enter";
-        enterKey.textContent = "Enter";
-        enterKey.id = "key-Enter";
-        enterKey.addEventListener("click", () => handleKeyClick("Enter"));
-        rowDiv.appendChild(enterKey);
-      }
-
-      row.split("").forEach((key) => {
-        const keyButton = document.createElement("button");
-        keyButton.className = "key";
-        keyButton.textContent = key;
-        keyButton.id = `key-${key}`;
-        keyButton.addEventListener("click", () => handleKeyClick(key));
-        rowDiv.appendChild(keyButton);
-      });
-
-      // Add "Backspace" at the end of the last row
-      if (rowIndex === layout.length - 1) {
-        const backspaceKey = document.createElement("button");
-        backspaceKey.className = "key backspace";
-        backspaceKey.textContent = "⌫";
-        backspaceKey.id = "key-Backspace";
-        backspaceKey.addEventListener("click", () => handleKeyClick("⌫"));
-        rowDiv.appendChild(backspaceKey);
-      }
-      keyboardContainer.appendChild(rowDiv);
-    });
+    return null; // or default word
   }
 
-  function triggerConfetti() {
-    confetti({
-      particleCount: 200,
-      spread: 80,
-      origin: { y: 0.6 },
-    });
+  const modal = document.getElementById("resultModal");
+  const scoreElement = document.getElementById("gameScore");
+  const resultHeaderElement = document.getElementById("resultHeader");
+  const resultTextElement = document.getElementById("resultText");
+  const shareButton = document.getElementById("shareButton");
+  const closeModal = document.getElementById("closeModal");
+
+  // Function to show the modal with the game's score
+  function showResultModal(score, guesses, variant) {
+    resultHeaderElement.textContent = `${score}`;
+    // scoreElement.textContent = `${score}`;
+    // resultTextElement.textContent = createShareableLink(targetWord);
+    modal.style.display = "block";
   }
+
+  // Add event listener to the share button
+  shareButton.addEventListener("click", () => {
+    let resultText = `${name} - ${statusMapHistory.length}/${maxAttempts} \n`;
+    resultText += generateResultText(
+      targetWord,
+      statusMapHistory,
+      feedbackStyle
+    );
+    navigator.clipboard
+      .writeText(resultText)
+      .then(() => Ui.displayMessage("Result copied to clipboard!"))
+      .catch((err) => console.error("Failed to copy:", err));
+  });
+
+  // Close modal
+  closeModal.addEventListener("click", () => {
+    modal.style.display = "none";
+  });
 });
 
 document.addEventListener(
@@ -543,3 +544,8 @@ document.addEventListener(
   },
   { passive: false }
 );
+
+// document.getElementById("playAgainButton").addEventListener("click", () => {
+//   // Reset the game (call a function to reset your game state)
+//   startGame();
+// });

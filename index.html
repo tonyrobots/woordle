@@ -3,13 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Woordle: 6-letter Wordle clone</title>
+    <title>Wordlish</title>
     <link rel="stylesheet" href="styles.css" />
-    <link
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap"
+      rel="stylesheet"
+    /> -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap"
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    />
   </head>
   <body>
     <div id="gameContainer">
@@ -68,7 +79,24 @@
         <a href="./?v=3">woordle (6 letters)</a>
       </div> -->
     </div>
+    <!-- Modal Structure -->
+    <div id="resultModal" class="modal">
+      <div class="modal-content">
+        <button id="closeModal"><i class="fa fa-close"></i></button>
 
-    <script src="script.js"></script>
+        <h3 id="resultHeader">Your Game</h3>
+        <p id="gameScore"></p>
+        <div id="resultText"></div>
+        <div class="modal-buttons">
+          <button id="shareButton">
+            SHARE RESULT
+            <i class="fa-solid fa-share-nodes"></i>
+          </button>
+          <a href=""><button id="playAgainButton">Play Again</button></a>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
   </body>
 </html>

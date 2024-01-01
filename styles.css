@@ -2,7 +2,8 @@
   max-width: 600px;
   margin: auto;
   text-align: center;
-  font-family: "Roboto", sans-serif;
+  /* font-family: "Roboto", sans-serif; */
+  font-family: "Poppins", sans-serif;
 }
 
 #grid {
@@ -24,10 +25,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 24px; /* Adjust as needed */
-  font-weight: bold;
+  font-size: 32px; /* Adjust as needed */
+  font-weight: 700;
   text-transform: uppercase;
-  font-family: "Roboto", sans-serif;
   perspective: 1000px;
   transform-style: preserve-3d;
 }
@@ -126,14 +126,15 @@
 }
 
 /* Add classes for different letter statuses: correct, present, incorrect */
-.correct {
-  background-color: rgb(75, 164, 75);
+
+.incorrect {
+  background-color: #787c7e;
 }
 .present {
   background-color: #c9a33c;
 }
-.incorrect {
-  background-color: #999;
+.correct {
+  background-color: rgb(75, 164, 75);
 }
 /* .bef {
   background-color: #aaa6f4;
@@ -164,8 +165,8 @@
   align-items: center;
   justify-content: center;
   /* border: 1px solid #000; */
-  font-size: 24px;
-  font-weight: bold;
+  /* font-size: 24px;
+  font-weight: bold; */
   text-transform: uppercase;
   backface-visibility: hidden;
 }
@@ -193,7 +194,7 @@
 .cell .back.bef::after {
   content: "→"; /* Dot for 'bef' */
   position: absolute;
-  top: 80%;
+  top: 85%;
   /* right: 5px; Adjust as needed */
   transform: translateY(-50%);
   color: rgba(255, 255, 255, 0.5); /* White with 50% opacity */
@@ -204,7 +205,7 @@
 .cell .back.aft::before {
   content: "←"; /* Dot for 'aft' */
   position: absolute;
-  top: 80%;
+  top: 85%;
   /* left: 5px; Adjust as needed */
   transform: translateY(-50%);
   color: rgba(255, 255, 255, 0.5); /* White with 50% opacity */
@@ -255,4 +256,83 @@
   transform: translate(-50%, -50%);
   color: rgba(255, 255, 255, 0.7); /* Translucent white */
   font-size: 2em; /* Adjust size as needed */
+}
+
+/* share modal stuff */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  font-family: "Roboto", sans-serif;
+  z-index: 1; /* Sit on top */
+  border-radius: 8px;
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+  position: relative;
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border-radius: 15px;
+  border: 3px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+  max-width: 500px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around; /* Adjust as needed */
+  padding: 10px 0;
+}
+
+#playAgainButton,
+#shareButton {
+  padding: 10px 20px;
+  margin: 10px; /* Spacing between buttons */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  /* Add more styling as needed */
+}
+
+/* Additional styling for individual buttons if needed */
+
+#shareButton {
+  background-color: #4caf50; /* Green background */
+  color: white; /* White text */
+  padding: 10px 20px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+#shareButton:hover {
+  background-color: #45a049; /* Darker shade on hover */
+}
+
+.share-icon {
+  margin: 25px;
+  /* You can add more styling for the icon here */
+}
+
+#shareButton .fa-share-nodes {
+  font-size: 20px; /* Makes the icon bigger */
+  font-weight: bold; /* Makes the icon bolder */
+}
+
+#closeModal {
+  color: #000;
+  position: absolute;
+  top: 12px; /* Adjust as needed */
+  right: 12px; /* Adjust as needed */
+  font-size: 36px;
+  font-weight: 700;
 }
