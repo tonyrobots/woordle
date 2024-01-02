@@ -37,7 +37,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let focusCellIndex = 0;
   let statusMapHistory = [];
   let guesses = [];
-  let gameOver = false; //  variable to track game state
+  //  variables to track game state, TODO clean up
+  let gameOver = false;
+  let gameWon = false;
 
   // set standard settings
   let maxAttempts = 6;
@@ -103,6 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
     statusMapHistory = [];
     guesses = [];
     gameOver = false;
+    gameWon = false;
     //letter range?
 
     currentAttempt = 0;
@@ -132,6 +135,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Additional initialization logic can go here
     gameOver = false; // Reset game state when starting a new game
+
+    // try to load gamestate from localstorage
+    loadGameState();
   }
 
   function getRandomWord() {
@@ -235,6 +241,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateGrid() {
+    // return if game is over
+    if (gameOver) {
+      return;
+    }
+
     for (let i = 0; i < letterCount; i++) {
       const cellId = `cell${currentAttempt}-${i}`;
       const cell = document.getElementById(cellId);
@@ -335,14 +346,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       currentAttempt++;
       if (currentAttempt === maxAttempts) {
-        Ui.displayMessage(`Game over! The word was ${targetWord}.`);
+        Ui.displayMessage(`Sorry, you lose. The word was ${targetWord}.`);
         gameOver = true; // Set gameOver to true when the game ends
+        endGame(false);
+        return;
       }
       updateFocus(0); // back to the beginning
 
       if (feedbackStyle === "alphabetical") {
         updateLetterRanges(guess, statusMap, currentAttempt % letterCount);
       }
+      //   saveGameState(guesses, gameOver, gameWon, statusMapHistory);
     }
   }
 
@@ -485,15 +499,26 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  function endGame() {
+  function endGame(won = true) {
     gameOver = true; // Set gameOver to true when the game ends
+    gameWon = won;
+    let endMessage = "";
+    if (won) {
+      endMessage = `You found the word ${targetWord} in ${
+        statusMapHistory.length
+      } ${statusMapHistory.length === 1 ? "guess" : "guesses"}!`;
+    } else {
+      endMessage = `Sorry, you failed to find the word ${targetWord} in ${statusMapHistory.length} guesses.`;
+    }
+    // saveGameState(guesses, gameOver, gameWon, statusMapHistory);
 
     setTimeout(() => {
       showResultModal(
         // `${statusMapHistory.length}/${maxAttempts}`,
-        `You found the word ${targetWord} in ${statusMapHistory.length} guesses!`,
+        endMessage,
         guesses,
-        variant
+        variant,
+        won
       );
     }, 2000);
 
@@ -591,6 +616,47 @@ document.addEventListener("DOMContentLoaded", () => {
     return null; // or default word
   }
 
+  // game state for daily variant
+  function saveGameState(guesses, gameOver, gameWon, statusMapHistory) {
+    const gameState = {
+      guesses: guesses, // Array of guesses
+      statusMapHistory: statusMapHistory, // Array of status maps
+      gameWon: gameWon, // Boolean indicating if the game is won
+      gameOver: gameOver, // Boolean indicating if the game is over
+      date: new Date().toDateString(), // The date when the game was solved
+    };
+    localStorage.setItem("gameState", JSON.stringify(gameState));
+    console.log("game state saved - " + gameState);
+  }
+
+  function loadGameState() {
+    const gameState = JSON.parse(localStorage.getItem("gameState"));
+    const today = new Date().toDateString();
+
+    if (gameState && gameState.date === today) {
+      console.log("game state loaded - " + gameState);
+      // Game was already played today, restore the state
+      //   restoreGrid(gameState.gridState);
+      guesses = gameState.guesses;
+      statusMapHistory = gameState.statusMapHistory;
+      gameWon = gameState.gameWon;
+      gameOver = gameState.gameOver;
+      updateGrid();
+      updateKeyboardStatus();
+      if (gameState.gameOver) {
+        // Game was already over, show the result
+        showResultModal(
+          `${gameState.statusMapHistory.length}/${maxAttempts}`,
+          gameState.guesses,
+          variant,
+          gameState.gameWon
+        );
+      }
+    }
+  }
+
+  window.onload = loadGameState;
+
   const modal = document.getElementById("resultModal");
   const scoreElement = document.getElementById("gameScore");
   const resultHeaderElement = document.getElementById("resultHeader");
@@ -599,16 +665,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeModal = document.getElementById("closeModal");
 
   // Function to show the modal with the game's score
-  function showResultModal(score, guesses, variant) {
+  function showResultModal(score, guesses, variant, won) {
     resultHeaderElement.textContent = `${score}`;
     // scoreElement.textContent = `${score}`;
     // resultTextElement.textContent = createShareableLink(targetWord);
+    // hide play again button if daily variant
+    if (dailyWord) {
+      document.getElementById("playAgainButton").style.display = "none";
+    }
     modal.style.display = "block";
   }
 
   // Add event listener to the share button
+  // if game was lost, set score to "X"
   shareButton.addEventListener("click", () => {
-    let resultText = `${name} - ${statusMapHistory.length}/${maxAttempts} \n`;
+    let resultText = `${name} - ${
+      gameWon ? statusMapHistory.length : "X"
+    }/${maxAttempts} \n`;
     resultText += generateResultText(
       targetWord,
       statusMapHistory,
