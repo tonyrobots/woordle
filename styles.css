@@ -58,7 +58,7 @@ h1 {
   outline-offset: -2px;
 }
 .correct {
-  background-color: rgb(75, 164, 75);
+  background-color: #4ba44b;
   color: white;
 }
 
@@ -168,7 +168,7 @@ h1 {
 } */
 
 .possible {
-  background-color: rgb(75, 164, 75);
+  background-color: #4ba44b;
   color: white;
 }
 
@@ -306,7 +306,7 @@ h1 {
   position: fixed; /* Stay in place */
   font-family: "Poppins", sans-serif;
   font-weight: normal;
-  z-index: 1; /* Sit on top */
+  z-index: 10; /* Sit on top */
   border-radius: 8px;
   left: 0;
   top: 0;

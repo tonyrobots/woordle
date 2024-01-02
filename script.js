@@ -15,21 +15,36 @@ document.addEventListener("DOMContentLoaded", () => {
       variant = "standard";
     } else if (gameVariant === "2") {
       variant = "alpha";
-      document.getElementById("helpModal").style.display = "block";
+      // document.getElementById("helpModal").style.display = "block";
     } else if (gameVariant === "3") {
       variant = "6-letter";
     } else if (gameVariant === "4") {
       variant = "alpha-daily";
-      document.getElementById("helpModal").style.display = "block";
+      // document.getElementById("helpModal").style.display = "block";
     }
   } else {
     // set variant here
     //   let variant = "standard";
     variant = "alpha-daily";
-    document.getElementById("helpModal").style.display = "block";
+    // document.getElementById("helpModal").style.display = "block";
 
     //   variant = "6-letter";
   }
+  // show help modal if it's been more than a week since last visit
+  const lastVisitDate = localStorage.getItem("lastVisitDate");
+  const lastVisitTime = lastVisitDate ? new Date(lastVisitDate).getTime() : 0;
+  const now = new Date();
+  const oneWeek = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
+
+  if (
+    !lastVisitDate ||
+    (now.getTime() - lastVisitTime > oneWeek && variant == "alpha-daily")
+  ) {
+    document.getElementById("helpModal").style.display = "block";
+  }
+
+  localStorage.setItem("lastVisitDate", now.toISOString());
+
   const standardKeyboardLayout = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
   const alphabeticalKeyboardLayout = ["ABCDEFGHIJ", "KLMNOPQRS", "TUVWXYZ"];
 
