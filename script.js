@@ -135,9 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Additional initialization logic can go here
     gameOver = false; // Reset game state when starting a new game
-
-    // try to load gamestate from localstorage
-    loadGameState();
   }
 
   function getRandomWord() {
@@ -654,8 +651,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   }
-
-  window.onload = loadGameState;
 
   const modal = document.getElementById("resultModal");
   const scoreElement = document.getElementById("gameScore");
