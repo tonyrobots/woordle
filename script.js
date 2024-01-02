@@ -57,6 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (variant === "alpha") {
     feedbackStyle = "alphabetical";
     name = "Worderly";
+    document.getElementById("subhead").textContent +=
+      "practice mode, play as much as you want!";
   } else if (variant === "6-letter") {
     maxAttempts = 8;
     letterCount = 6;
