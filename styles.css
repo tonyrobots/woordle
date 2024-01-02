@@ -30,6 +30,7 @@ h1 {
   font-size: 16px;
   font-weight: 400;
   font-style: italic;
+  margin-bottom: 13px;
 }
 
 .row {
@@ -95,11 +96,12 @@ h1 {
 #keyboard {
   position: fixed;
   bottom: 0;
-  left: 0;
-  width: 100%;
+  left: 50%; /* Move the left edge to the center of the screen */
+  transform: translateX(-50%); /* Shift it back left by half its width */
+  max-width: 700px; /* Your desired max-width */
+  width: 100%; /* Ensures it takes full width if less than max-width */
   padding: 3px 2px;
-  /* box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2); */
-  background-color: #f1f1f1; /* Optional: background color for the keyboard */
+  /* Additional styles */
 }
 
 #playAgain {
