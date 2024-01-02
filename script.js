@@ -1,4 +1,4 @@
-import { generateResultText } from "./share.js";
+import { generateResultText, createShareableLink } from "./share.js";
 import * as Ui from "./uiHandling.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -221,6 +221,9 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         updateGrid();
       }, 1000);
+    } else if (e.key === "?") {
+      // show help modal
+      document.getElementById("helpModal").style.display = "block";
     }
     // focusCellIndex = currentInput.length;
     if (focusCellIndex < letterCount) {
@@ -637,8 +640,13 @@ document.addEventListener("DOMContentLoaded", () => {
     let resultText = `${name} - ${
       gameWon ? statusMapHistory.length : "X"
     }/${maxAttempts} \n`;
+    // add word to share link, unless daily variant
+    let shareWord = "";
+    if (!dailyWord) {
+      shareWord = targetWord;
+    }
     resultText += generateResultText(
-      targetWord,
+      shareWord,
       statusMapHistory,
       feedbackStyle
     );
@@ -652,7 +660,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("playAgainButton").addEventListener("click", () => {
     // reload the page, without the "w" parameter
     console.log("reloading");
-    window.location = window.location.href.split("?")[0];
+    // window.location = window.location.href.split("?")[0];
+    window.location = createShareableLink();
   });
   // Close modal
   closeModal.addEventListener("click", () => {

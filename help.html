@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Game Help</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="helpModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>How to Play</h2>
+        <p>Welcome to Worderly! The goal is to guess the hidden word.</p>
+
+        <p>
+          When you guess a word, you receive feedback on each letter. It's like
+          Wordle, but with a twist -- the clues relate to where each letter in
+          the answer falls alphabetically in relation to your guess.
+        </p>
+        <ul>
+          <li>
+            <span class="correct">A</span>: Correct letter in the correct
+            position.
+          </li>
+          <li>
+            <span class="aft">B</span>: The correct letter for this position
+            comes after your guess in the alphabet.
+          </li>
+          <li>
+            <span class="bef">Z</span>: The correct letter for this position
+            comes before your guess in the alphabet.
+          </li>
+        </ul>
+        <p>
+          Use this feedback to narrow down the possibilities and guess the word!
+        </p>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

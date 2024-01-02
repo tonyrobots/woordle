@@ -7,25 +7,12 @@ export function generateResultText(word, statusMapHistory, feedbackStyle) {
       resultText += generateStandardResultLine(statusMap) + "\n";
     }
   });
-  // leave out the word for now
-  //   resultText += createShareableLink(word) + "\n";
-  resultText += createShareableLink() + "\n";
+  resultText += createShareableLink(word) + "\n";
 
   return resultText;
 }
 
-// function createShareableLink(word) {
-//   const encodedWord = btoa(word); // Encode in Base64
-//   // preserve the base url plus the variant query string ("v") if it exists
-//   const gameUrl = window.location.href.split("?")[0]; // Base URL of your game
-//   if (word === "") {
-//     return `${gameUrl}`;
-//   } else {
-//     return `${gameUrl}?w=${encodedWord}`;
-//   }
-// }
-
-function createShareableLink(word = "") {
+export function createShareableLink(word = "") {
   const encodedWord = btoa(word); // Encode in Base64
   const baseUrl = window.location.href.split("?")[0]; // Base URL of your game
 
