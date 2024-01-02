@@ -15,15 +15,19 @@ document.addEventListener("DOMContentLoaded", () => {
       variant = "standard";
     } else if (gameVariant === "2") {
       variant = "alpha";
+      document.getElementById("helpModal").style.display = "block";
     } else if (gameVariant === "3") {
       variant = "6-letter";
     } else if (gameVariant === "4") {
       variant = "alpha-daily";
+      document.getElementById("helpModal").style.display = "block";
     }
   } else {
     // set variant here
     //   let variant = "standard";
     variant = "alpha-daily";
+    document.getElementById("helpModal").style.display = "block";
+
     //   variant = "6-letter";
   }
   const standardKeyboardLayout = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
@@ -140,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function getRandomWord() {
     return wordList.length > 0
       ? wordList[Math.floor(Math.random() * wordList.length)]
-      : "WHOOPS";
+      : "ERRORS";
   }
 
   function getTodaysWord() {
@@ -615,12 +619,13 @@ document.addEventListener("DOMContentLoaded", () => {
     return null; // or default word
   }
 
-  const modal = document.getElementById("resultModal");
+  const resultModal = document.getElementById("resultModal");
+  const helpModal = document.getElementById("helpModal");
   const scoreElement = document.getElementById("gameScore");
   const resultHeaderElement = document.getElementById("resultHeader");
   const resultTextElement = document.getElementById("resultText");
   const shareButton = document.getElementById("shareButton");
-  const closeModal = document.getElementById("closeModal");
+  //   const closeModal = document.getElementById("closeModal");
 
   // Function to show the modal with the game's score
   function showResultModal(score, guesses, variant, won) {
@@ -631,7 +636,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (dailyWord) {
       document.getElementById("playAgainButton").style.display = "none";
     }
-    modal.style.display = "block";
+    resultModal.style.display = "block";
   }
 
   // Add event listener to the share button
@@ -652,7 +657,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     navigator.clipboard
       .writeText(resultText)
-      .then(() => Ui.displayMessage("Result copied to clipboard!"))
+      .then(() => Ui.displayMessage("Result copied to clipboard"))
       .catch((err) => console.error("Failed to copy:", err));
   });
 
@@ -664,9 +669,32 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location = createShareableLink();
   });
   // Close modal
-  closeModal.addEventListener("click", () => {
-    modal.style.display = "none";
+  //   closeModal.addEventListener("click", () => {
+  //     modal.style.display = "none";
+  //   });
+  const closeButtons = document.querySelectorAll(".close-modal-button");
+  closeButtons.forEach((button) => {
+    button.addEventListener("click", closeModal);
   });
+
+  //   function closeModal() {
+  //     resultModal.style.display = "none";
+  //     helpModal.style.display = "none";
+  //   }
+
+  function closeModal(event) {
+    let modal = event.target.closest(".modal");
+    if (modal) {
+      modal.style.display = "none";
+    }
+  }
+
+  //   closeButtons.forEach((button) => {
+  //     console.log("adding event listener");
+  //     button.addEventListener("click", () => {
+  //       resultModal.style.display = "none";
+  //     });
+  //   });
 });
 
 document.addEventListener(

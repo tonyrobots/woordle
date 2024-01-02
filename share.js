@@ -62,13 +62,15 @@ function generateAlphabeticResultLine(statusMap) {
   for (const status in statusMap) {
     switch (statusMap[status]) {
       case "correct":
-        line += "🟩";
+        line += "🟢";
         break;
       case "bef":
-        line += "➡️";
+        // line += "➡️";
+        line += "🥶";
         break;
       case "aft":
-        line += "⬅️";
+        // line += "⬅️";
+        line += "🥵";
         break;
       default:
         line += "⬜";

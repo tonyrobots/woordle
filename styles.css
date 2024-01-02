@@ -302,7 +302,8 @@ h1 {
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
-  font-family: "Roboto", sans-serif;
+  font-family: "Poppins", sans-serif;
+  font-weight: normal;
   z-index: 1; /* Sit on top */
   border-radius: 8px;
   left: 0;
@@ -316,13 +317,13 @@ h1 {
 .modal-content {
   position: relative;
   background-color: #fefefe;
-  margin: 25% auto; /* 15% from the top and centered */
+  margin: 5% auto; /* X% from the top and centered */
   padding: 20px;
-  padding-top: 50px;
+  /* padding-top: 25px; */
   border-radius: 15px;
   border: 3px solid #888;
   width: 80%; /* Could be more or less, depending on screen size */
-  max-width: 500px;
+  max-width: 700px;
   /* min-height: 300px; */
 }
 
@@ -370,7 +371,7 @@ h1 {
   font-weight: bold; /* Makes the icon bolder */
 }
 
-#closeModal {
+.close-modal-button {
   color: #000;
   position: absolute;
   top: 8px; /* Adjust as needed */
@@ -379,4 +380,15 @@ h1 {
   font-weight: 700;
   background-color: transparent;
   border: 0;
+}
+
+.mini-grid {
+  display: inline-flex;
+  margin-right: 10px; /* Space between grid and text */
+}
+
+.explanation-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 }

@@ -12,11 +12,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
       rel="stylesheet"
     /> -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
@@ -86,7 +86,7 @@
     <!-- Modal Structure -->
     <div id="resultModal" class="modal">
       <div class="modal-content">
-        <button id="closeModal"><i class="fa fa-close"></i></button>
+        <button class="close-modal-button"><i class="fa fa-close"></i></button>
 
         <h3 id="resultHeader">Your Game</h3>
         <p id="gameScore"></p>
@@ -102,32 +102,89 @@
     </div>
     <div id="helpModal" class="modal">
       <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>How to Play</h2>
-        <p>Welcome to Worderly! The goal is to guess the hidden word.</p>
+        <button class="close-modal-button"><i class="fa fa-close"></i></button>
+        <h2>Welcome to Worderly!</h2>
+        <p>The goal is to guess the hidden word.</p>
 
         <p>
-          When you guess a word, you receive feedback on each letter. It's like
-          Wordle, but with a twist -- the clues relate to where each letter in
-          the answer falls alphabetically in relation to your guess.
+          It's like Wordle, but with a twist -- the clues relate to where each
+          letter in the answer falls alphabetically in relation to your guess.
         </p>
-        <ul>
-          <li>
-            <span class="correct">A</span>: Correct letter in the correct
-            position.
-          </li>
-          <li>
-            <span class="aft">B</span>: The correct letter for this position
-            comes after your guess in the alphabet.
-          </li>
-          <li>
-            <span class="bef">Z</span>: The correct letter for this position
-            comes before your guess in the alphabet.
-          </li>
-        </ul>
+
+        <div id="grid">
+          <div class="row">
+            <div class="cell flip" id="cell0-0">
+              <div class="front">G</div>
+              <div class="back bef">G</div>
+            </div>
+            <div class="cell flip" id="cell0-1">
+              <div class="front">U</div>
+              <div class="back aft">U</div>
+            </div>
+            <div class="cell flip" id="cell0-2">
+              <div class="front">E</div>
+              <div class="back bef">E</div>
+            </div>
+            <div class="cell flip" id="cell0-3">
+              <div class="front">S</div>
+              <div class="back bef">S</div>
+            </div>
+            <div class="cell flip" id="cell0-4">
+              <div class="front">S</div>
+              <div class="back aft">S</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="cell flip" id="cell1-0">
+              <div class="front">S</div>
+              <div class="back correct">S</div>
+            </div>
+            <div class="cell flip" id="cell1-1">
+              <div class="front">O</div>
+              <div class="back correct">O</div>
+            </div>
+            <div class="cell flip" id="cell1-2">
+              <div class="front">L</div>
+              <div class="back correct">L</div>
+            </div>
+            <div class="cell flip" id="cell1-3">
+              <div class="front">V</div>
+              <div class="back correct">V</div>
+            </div>
+            <div class="cell flip" id="cell1-4">
+              <div class="front">E</div>
+              <div class="back correct">E</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="explanation-row">
+          <div class="cell flip mini-grid">
+            <div class="back bef">G</div>
+          </div>
+          <p>
+            🥶 Too cold! The correct letter for this spot comes
+            <b>after</b> your guess in the alphabet.
+          </p>
+        </div>
+
+        <div class="explanation-row">
+          <div class="cell flip mini-grid">
+            <div class="back aft">U</div>
+          </div>
+          <p>
+            🥵 Too hot! The correct letter for this position comes
+            <b>before</b> your guess in the alphabet.
+          </p>
+        </div>
+        <div class="explanation-row">...and so on!</div>
+
         <p>
-          Use this feedback to narrow down the possibilities and guess the word!
+          Use these clues to narrow down the possibilities and guess the word.
+          As a hint, the keyboard will update to show which letters are still
+          available for each letter in the word as you type.
         </p>
+        <p>Happy Worderlying!</p>
       </div>
     </div>
 
