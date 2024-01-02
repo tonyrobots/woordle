@@ -353,7 +353,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (feedbackStyle === "alphabetical") {
         updateLetterRanges(guess, statusMap, currentAttempt % letterCount);
       }
-      //   saveGameState(guesses, gameOver, gameWon, statusMapHistory);
     }
   }
 
@@ -611,45 +610,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return atob(encodedWord); // Decode from Base64
     }
     return null; // or default word
-  }
-
-  // game state for daily variant
-  function saveGameState(guesses, gameOver, gameWon, statusMapHistory) {
-    const gameState = {
-      guesses: guesses, // Array of guesses
-      statusMapHistory: statusMapHistory, // Array of status maps
-      gameWon: gameWon, // Boolean indicating if the game is won
-      gameOver: gameOver, // Boolean indicating if the game is over
-      date: new Date().toDateString(), // The date when the game was solved
-    };
-    localStorage.setItem("gameState", JSON.stringify(gameState));
-    console.log("game state saved - " + gameState);
-  }
-
-  function loadGameState() {
-    const gameState = JSON.parse(localStorage.getItem("gameState"));
-    const today = new Date().toDateString();
-
-    if (gameState && gameState.date === today) {
-      console.log("game state loaded - " + gameState);
-      // Game was already played today, restore the state
-      //   restoreGrid(gameState.gridState);
-      guesses = gameState.guesses;
-      statusMapHistory = gameState.statusMapHistory;
-      gameWon = gameState.gameWon;
-      gameOver = gameState.gameOver;
-      updateGrid();
-      updateKeyboardStatus();
-      if (gameState.gameOver) {
-        // Game was already over, show the result
-        showResultModal(
-          `${gameState.statusMapHistory.length}/${maxAttempts}`,
-          gameState.guesses,
-          variant,
-          gameState.gameWon
-        );
-      }
-    }
   }
 
   const modal = document.getElementById("resultModal");

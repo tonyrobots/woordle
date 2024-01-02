@@ -152,9 +152,11 @@ h1 {
 }
 .present {
   background-color: #c9a33c;
+  color: white;
 }
 .correct {
   background-color: rgb(75, 164, 75);
+  color: white;
 }
 /* .bef {
   background-color: #aaa6f4;
