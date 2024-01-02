@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 1 = standard
   // 2 = alphabetical
   // 3 = 6-letter
+  // 4 = alphabetical, daily
 
   if (gameVariant) {
     if (gameVariant === "1") {
@@ -16,15 +17,18 @@ document.addEventListener("DOMContentLoaded", () => {
       variant = "alpha";
     } else if (gameVariant === "3") {
       variant = "6-letter";
+    } else if (gameVariant === "4") {
+      variant = "alpha-daily";
     }
   } else {
     // set variant here
     //   let variant = "standard";
-    variant = "alpha";
+    variant = "alpha-daily";
     //   variant = "6-letter";
   }
   const standardKeyboardLayout = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
   const alphabeticalKeyboardLayout = ["ABCDEFGHIJ", "KLMNOPQRS", "TUVWXYZ"];
+
   let wordList = [];
   let validGuesses = [];
   let targetWord = "";
@@ -39,17 +43,22 @@ document.addEventListener("DOMContentLoaded", () => {
   let maxAttempts = 6;
   let letterCount = 5;
   let feedbackStyle = "standard";
-  let name = "Just another wordle clone";
+  let name = "Wordlish";
+  let dailyWord = false;
   let requireValidGuesses = true;
 
   // override with variant settings
   if (variant === "alpha") {
     feedbackStyle = "alphabetical";
-    name = "Wordlish";
+    name = "Worderly";
   } else if (variant === "6-letter") {
     maxAttempts = 8;
     letterCount = 6;
     name = "Woordle";
+  } else if (variant === "alpha-daily") {
+    feedbackStyle = "alphabetical";
+    name = "Worderly";
+    dailyWord = true;
   }
 
   let letterRanges = Array(letterCount)
@@ -87,10 +96,32 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", handleKeyPress);
 
   function startGame() {
+    targetWord = "";
+    currentAttempt = 0;
+    currentInput = "";
+    focusCellIndex = 0;
+    statusMapHistory = [];
+    guesses = [];
+    gameOver = false;
+    //letter range?
+
     currentAttempt = 0;
     currentInput = "";
 
-    if (getWordFromUrl()) {
+    if (dailyWord) {
+      // set subheader to today's date in format Month Day, Year
+      const today = new Date();
+      const dateString = today.toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+
+      document.getElementById("subhead").textContent +=
+        "daily puzzle for " + dateString;
+      targetWord = getTodaysWord().toUpperCase();
+    } else if (getWordFromUrl()) {
       targetWord = getWordFromUrl().toUpperCase();
     } else {
       targetWord = getRandomWord();
@@ -107,6 +138,11 @@ document.addEventListener("DOMContentLoaded", () => {
     return wordList.length > 0
       ? wordList[Math.floor(Math.random() * wordList.length)]
       : "WHOOPS";
+  }
+
+  function getTodaysWord() {
+    const index = Ui.getTodaysWordIndex() % wordList.length; // Use modulo to loop back to start
+    return wordList[index];
   }
 
   function clearGrid() {
@@ -178,6 +214,10 @@ document.addEventListener("DOMContentLoaded", () => {
     } else if (e.key === "Enter" && currentInput.length === letterCount) {
       submitGuess(currentInput);
       currentInput = "";
+      // wait 1 second before clearing the grid
+      setTimeout(() => {
+        updateGrid();
+      }, 1000);
     }
     // focusCellIndex = currentInput.length;
     if (focusCellIndex < letterCount) {
@@ -223,9 +263,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       //   Check if the guess is a valid word
       if (!validGuesses.includes(guess)) {
-        Ui.displayMessage("Not a valid word");
-        // console.log("Guess: " + guess + " is not a valid word");
+        Ui.displayMessage("that's not a word", true);
         updateFocus(0);
+
         return; // Do not proceed further
       }
 
@@ -458,11 +498,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 2000);
 
     // add link to play again
-    const gameUrl = window.location.href.split("?")[0]; // Base URL
+    // const gameUrl = window.location.href.split("?")[0]; // Base URL
 
-    document.getElementById(
-      "playAgain"
-    ).innerHTML = `<a href="gameUrl">Play Again</a>`;
+    // document.getElementById(
+    //   "playAgain"
+    // ).innerHTML = `<a href="${gameUrl}">Play Again</a>`;
   }
 
   function createGrid(letterCount, maxAttempts) {
@@ -580,6 +620,12 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch((err) => console.error("Failed to copy:", err));
   });
 
+  // add event listener to the play again button
+  document.getElementById("playAgainButton").addEventListener("click", () => {
+    // reload the page, without the "w" parameter
+    console.log("reloading");
+    window.location = window.location.href.split("?")[0];
+  });
   // Close modal
   closeModal.addEventListener("click", () => {
     modal.style.display = "none";
@@ -593,8 +639,3 @@ document.addEventListener(
   },
   { passive: false }
 );
-
-// document.getElementById("playAgainButton").addEventListener("click", () => {
-//   // Reset the game (call a function to reset your game state)
-//   startGame();
-// });

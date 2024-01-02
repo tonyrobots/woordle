@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wordlish</title>
+    <meta property="og:title" content="Today's Worderly" />
+    <meta name="twitter:title" content="Today's Worderly" />
+
+    <title>Worderly</title>
     <link rel="stylesheet" href="styles.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -24,7 +27,8 @@
   </head>
   <body>
     <div id="gameContainer">
-      <h1 id="gameName">Wordlish</h1>
+      <h1 id="gameName">Worderly</h1>
+      <div id="subhead"></div>
 
       <div id="grid"></div>
 
@@ -92,7 +96,7 @@
             SHARE RESULT
             <i class="fa-solid fa-share-nodes"></i>
           </button>
-          <a href=""><button id="playAgainButton">Play Again</button></a>
+          <button id="playAgainButton">Play Again</button>
         </div>
       </div>
     </div>

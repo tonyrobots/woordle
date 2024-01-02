@@ -12,6 +12,26 @@
   gap: 7px; /* Space between rows */
 }
 
+h1 {
+  /* set color of letters as gradient from #aaa6f4 to #eb8b60 */
+  /* background: linear-gradient(90deg, #6861e2 0%, #e17445 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; */
+  /* end gradient */
+
+  color: #555;
+  font-size: 32px;
+  /* less space below the heading */
+  margin-bottom: -10px;
+}
+
+#subhead {
+  color: #999;
+  font-size: 16px;
+  font-weight: 400;
+  font-style: italic;
+}
+
 .row {
   display: flex;
   justify-content: center;
@@ -248,6 +268,24 @@
   }
 }
 
+@keyframes shake {
+  20%,
+  70% {
+    transform: translate(-50%, -50%) translateX(0);
+    opacity: 1;
+  }
+
+  35%,
+  45%,
+  55% {
+    transform: translate(-50%, -50%) translateX(-10px);
+  }
+  40%,
+  50% {
+    transform: translate(-50%, -50%) translateX(10px);
+  }
+}
+
 /*  GT LT variant */
 .overlay {
   position: absolute;
@@ -276,12 +314,14 @@
 .modal-content {
   position: relative;
   background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
+  margin: 25% auto; /* 15% from the top and centered */
   padding: 20px;
+  padding-top: 50px;
   border-radius: 15px;
   border: 3px solid #888;
   width: 80%; /* Could be more or less, depending on screen size */
   max-width: 500px;
+  /* min-height: 300px; */
 }
 
 .modal-buttons {
@@ -331,8 +371,10 @@
 #closeModal {
   color: #000;
   position: absolute;
-  top: 12px; /* Adjust as needed */
-  right: 12px; /* Adjust as needed */
+  top: 8px; /* Adjust as needed */
+  right: 8px; /* Adjust as needed */
   font-size: 36px;
   font-weight: 700;
+  background-color: transparent;
+  border: 0;
 }

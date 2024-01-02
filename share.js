@@ -7,15 +7,43 @@ export function generateResultText(word, statusMapHistory, feedbackStyle) {
       resultText += generateStandardResultLine(statusMap) + "\n";
     }
   });
-  resultText += createShareableLink(word) + "\n";
+  // leave out the word for now
+  //   resultText += createShareableLink(word) + "\n";
+  resultText += createShareableLink() + "\n";
 
   return resultText;
 }
 
-function createShareableLink(word) {
+// function createShareableLink(word) {
+//   const encodedWord = btoa(word); // Encode in Base64
+//   // preserve the base url plus the variant query string ("v") if it exists
+//   const gameUrl = window.location.href.split("?")[0]; // Base URL of your game
+//   if (word === "") {
+//     return `${gameUrl}`;
+//   } else {
+//     return `${gameUrl}?w=${encodedWord}`;
+//   }
+// }
+
+function createShareableLink(word = "") {
   const encodedWord = btoa(word); // Encode in Base64
-  const gameUrl = window.location.href.split("?")[0]; // Base URL of your game
-  return `${gameUrl}?w=${encodedWord}`;
+  const baseUrl = window.location.href.split("?")[0]; // Base URL of your game
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const variant = urlParams.get("v"); // Get the variant parameter
+
+  let shareUrl = baseUrl;
+
+  if (variant) {
+    shareUrl += `?v=${variant}`; // Include the variant parameter if it exists
+  }
+
+  if (word !== "") {
+    // Append the word parameter, with an '&' if the variant parameter exists, '?' otherwise
+    shareUrl += `${variant ? "&" : "?"}w=${encodedWord}`;
+  }
+
+  return shareUrl;
 }
 
 function generateStandardResultLine(statusMap) {
