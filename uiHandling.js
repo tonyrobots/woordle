@@ -1,8 +1,12 @@
 export function triggerConfetti() {
+  const viewportHeight = window.innerHeight;
+  const fixedHeightFromTop = 300; // Adjust this value as needed
+  const yOrigin = fixedHeightFromTop / viewportHeight;
+
   confetti({
     particleCount: 200,
     spread: 80,
-    origin: { y: 0.6 },
+    origin: { y: yOrigin },
   });
 }
 
