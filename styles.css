@@ -323,7 +323,8 @@ h1 {
   position: relative;
   background-color: #fefefe;
   margin: 5% auto; /* X% from the top and centered */
-  padding: 20px;
+  /* padding: 20px; */
+  padding: 10px 60px 10px 20px; /* Adjust top and right padding */
   /* padding-top: 25px; */
   border-radius: 15px;
   border: 3px solid #888;
@@ -379,9 +380,9 @@ h1 {
 .close-modal-button {
   color: #000;
   position: absolute;
-  top: 8px; /* Adjust as needed */
+  top: 0px; /* Adjust as needed */
   right: 8px; /* Adjust as needed */
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 700;
   background-color: transparent;
   border: 0;
