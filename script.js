@@ -119,6 +119,13 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", handleKeyPress);
 
   function startGame() {
+    // tag game start event
+    gtag("event", "game_start", {
+      event_category: "Game",
+      event_label: "Start",
+      game_variant: variant,
+      game_name: name,
+    });
     targetWord = "";
     currentAttempt = 0;
     currentInput = "";
@@ -530,7 +537,16 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       endMessage = `Sorry, you failed to find the word ${targetWord} in ${statusMapHistory.length} guesses.`;
     }
-    // saveGameState(guesses, gameOver, gameWon, statusMapHistory);
+
+    // event tracking
+    gtag("event", "game_end", {
+      event_category: "Game",
+      event_label: "End",
+      game_won: won,
+      guess_count: statusMapHistory.length,
+      game_variant: variant,
+      game_name: name,
+    });
 
     setTimeout(() => {
       showResultModal(

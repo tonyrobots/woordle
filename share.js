@@ -17,6 +17,10 @@ export function shareGame(text, word = "") {
       .then(() => Ui.displayMessage("Result copied to clipboard"))
       .catch((err) => console.error("Failed to copy:", err));
   }
+  gtag("event", "share", {
+    event_category: "Interaction",
+    event_label: "Share",
+  });
 }
 
 export function generateResultText(word, statusMapHistory, feedbackStyle) {
