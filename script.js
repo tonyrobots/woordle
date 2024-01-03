@@ -1,4 +1,4 @@
-import { generateResultText, createShareableLink } from "./share.js";
+import { shareGame, generateResultText, createShareableLink } from "./share.js";
 import * as Ui from "./uiHandling.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -672,10 +672,7 @@ document.addEventListener("DOMContentLoaded", () => {
       statusMapHistory,
       feedbackStyle
     );
-    navigator.clipboard
-      .writeText(resultText)
-      .then(() => Ui.displayMessage("Result copied to clipboard"))
-      .catch((err) => console.error("Failed to copy:", err));
+    shareGame(resultText, shareWord);
   });
 
   // add event listener to the play again button

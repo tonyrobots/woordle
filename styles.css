@@ -96,11 +96,14 @@ h1 {
 #keyboard {
   position: fixed;
   bottom: 0;
-  left: 50%; /* Move the left edge to the center of the screen */
-  transform: translateX(-50%); /* Shift it back left by half its width */
-  max-width: 700px; /* Your desired max-width */
-  width: 100%; /* Ensures it takes full width if less than max-width */
+  left: 50%; /* Center align */
+  transform: translateX(-50%); /* Keep centered */
+  max-width: 700px; /* Max width */
+  width: calc(
+    100% - 20px
+  ); /* Full width minus desired total horizontal margin */
   padding: 3px 2px;
+  box-sizing: border-box; /* Include padding and border in the width */
   /* Additional styles */
 }
 

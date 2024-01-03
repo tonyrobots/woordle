@@ -1,3 +1,24 @@
+import * as Ui from "./uiHandling.js";
+
+export function shareGame(text, word = "") {
+  if (navigator.share) {
+    navigator
+      .share({
+        title: "Worderly!",
+        text: text,
+      })
+      .then(() => console.log("Successful share"))
+      .catch((error) => console.log("Error sharing:", error));
+    console.log("navigator share activated, text: ", text, "word: ", word);
+  } else {
+    // Fallback for browsers that don't support the Web Share API
+    navigator.clipboard
+      .writeText(text)
+      .then(() => Ui.displayMessage("Result copied to clipboard"))
+      .catch((err) => console.error("Failed to copy:", err));
+  }
+}
+
 export function generateResultText(word, statusMapHistory, feedbackStyle) {
   let resultText = "";
   statusMapHistory.forEach((statusMap) => {
