@@ -43,9 +43,19 @@ export function hashDate(date) {
 }
 
 export function getTodaysWordIndex() {
+  const daysOfWeek = ["Sun", "Mon", "Tues", "Weds", "Thurs", "Fri", "Sat"];
+
   const today = new Date();
   const dateString =
-    today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+    daysOfWeek[today.getDay()] +
+    "-" +
+    today.getFullYear() +
+    "-" +
+    (today.getMonth() + 1) +
+    "-" +
+    today.getDate();
+  console.log(dateString);
+
   const hashedDate = hashDate(dateString);
 
   return hashedDate;
