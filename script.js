@@ -30,20 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //   variant = "6-letter";
   }
-  // show help modal if it's been more than a week since last visit
-  const lastVisitDate = localStorage.getItem("lastVisitDate");
-  const lastVisitTime = lastVisitDate ? new Date(lastVisitDate).getTime() : 0;
-  const now = new Date();
-  const oneWeek = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
-
-  if (
-    !lastVisitDate ||
-    (now.getTime() - lastVisitTime > oneWeek && variant == "alpha-daily")
-  ) {
-    document.getElementById("helpModal").style.display = "block";
-  }
-
-  localStorage.setItem("lastVisitDate", now.toISOString());
 
   const standardKeyboardLayout = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
   const alphabeticalKeyboardLayout = ["ABCDEFGHIJ", "KLMNOPQRS", "TUVWXYZ"];
@@ -119,6 +105,38 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", handleKeyPress);
 
   function startGame() {
+    // first make sure the game hasn't already been completed today, if daily variant
+    if (variant == "alpha-daily") {
+      // show help modal if it's been more than a week since last visit
+      const lastVisitDate = localStorage.getItem("lastVisitDate");
+      const lastVisitTime = lastVisitDate
+        ? new Date(lastVisitDate).getTime()
+        : 0;
+      const now = new Date();
+      const oneWeek = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
+      if (!lastVisitDate || now.getTime() - lastVisitTime > oneWeek) {
+        document.getElementById("helpModal").style.display = "block";
+      }
+
+      localStorage.setItem("lastVisitDate", now.toISOString());
+
+      // check if daily game has been completed today
+      const dailyCompletion = JSON.parse(
+        localStorage.getItem("dailyGameCompleted")
+      );
+      const today = now.toDateString();
+      if (
+        dailyCompletion &&
+        dailyCompletion.date === today &&
+        dailyCompletion.completed
+      ) {
+        // set game to ended and show completion message
+        gameOver = true;
+        showCompletionMessage();
+        return;
+      }
+    }
+
     // tag game start event
     gtag("event", "game_start", {
       event_category: "Game",
@@ -537,7 +555,7 @@ document.addEventListener("DOMContentLoaded", () => {
         statusMapHistory.length
       } ${statusMapHistory.length === 1 ? "guess" : "guesses"}!`;
     } else {
-      endTitle = "Better luck tomorrow.";
+      endTitle = "Better luck next time.";
       endMessage = `Sorry, you failed to find the word ${targetWord} in ${statusMapHistory.length} guesses.`;
     }
 
@@ -662,18 +680,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const resultHeaderElement = document.getElementById("resultHeader");
   const resultTextElement = document.getElementById("resultText");
   const shareButton = document.getElementById("shareButton");
-  //   const closeModal = document.getElementById("closeModal");
 
   // Function to show the modal with the game's score
   function showResultModal(endTitle, endText, guesses, variant, won) {
     resultHeaderElement.textContent = `${endTitle}`;
     resultTextElement.textContent = `${endText}`;
-    // scoreElement.textContent = `${score}`;
-    // resultTextElement.textContent = createShareableLink(targetWord);
+
     // hide play again button if daily variant
     if (dailyWord) {
       document.getElementById("playAgainButton").style.display = "none";
     }
+
+    // show completion message, and set completed localStorage if daily variant
+    if (dailyWord) {
+      showCompletionMessage();
+      storeDailyCompletion();
+    }
+
     resultModal.style.display = "block";
   }
 
@@ -712,11 +735,6 @@ document.addEventListener("DOMContentLoaded", () => {
     button.addEventListener("click", closeModal);
   });
 
-  //   function closeModal() {
-  //     resultModal.style.display = "none";
-  //     helpModal.style.display = "none";
-  //   }
-
   function closeModal(event) {
     let modal = event.target.closest(".modal");
     if (modal) {
@@ -724,12 +742,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  //   closeButtons.forEach((button) => {
-  //     console.log("adding event listener");
-  //     button.addEventListener("click", () => {
-  //       resultModal.style.display = "none";
-  //     });
-  //   });
+  function storeDailyCompletion() {
+    console.log("storing daily completion");
+    const today = new Date().toDateString();
+    localStorage.setItem(
+      "dailyGameCompleted",
+      JSON.stringify({ date: today, completed: true })
+    );
+  }
+  function showCompletionMessage() {
+    document.getElementById("completionMessage").style.display = "block";
+    document.getElementById("grid-container").style.display = "none"; // Hide the grid
+    document.getElementById("keyboard").style.display = "none"; // Hide the grid
+  }
 });
 
 document.addEventListener(

@@ -254,6 +254,10 @@ h1 {
   transform: rotateX(180deg);
 }
 
+.gameOver {
+  display: none;
+}
+
 #gameMessage {
   position: fixed;
   top: 30%; /* Moved up from 50% to 30% */
@@ -418,6 +422,21 @@ h1 {
 #shareButton .fa-share-nodes {
   font-size: 20px; /* Makes the icon bigger */
   font-weight: bold; /* Makes the icon bolder */
+}
+
+.completion-message {
+  text-align: center;
+  padding: 20px;
+}
+
+.practice-mode-button {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 15px;
+  background-color: #4caf50;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
 }
 
 .mini-grid {
