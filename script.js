@@ -529,12 +529,15 @@ document.addEventListener("DOMContentLoaded", () => {
   function endGame(won = true) {
     gameOver = true; // Set gameOver to true when the game ends
     gameWon = won;
-    let endMessage = "";
+    let endMessage,
+      endTitle = "";
     if (won) {
+      endTitle = "Nice work!";
       endMessage = `You found the word ${targetWord} in ${
         statusMapHistory.length
       } ${statusMapHistory.length === 1 ? "guess" : "guesses"}!`;
     } else {
+      endTitle = "Better luck tomorrow.";
       endMessage = `Sorry, you failed to find the word ${targetWord} in ${statusMapHistory.length} guesses.`;
     }
 
@@ -551,6 +554,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       showResultModal(
         // `${statusMapHistory.length}/${maxAttempts}`,
+        endTitle,
         endMessage,
         guesses,
         variant,
@@ -661,8 +665,9 @@ document.addEventListener("DOMContentLoaded", () => {
   //   const closeModal = document.getElementById("closeModal");
 
   // Function to show the modal with the game's score
-  function showResultModal(score, guesses, variant, won) {
-    resultHeaderElement.textContent = `${score}`;
+  function showResultModal(endTitle, endText, guesses, variant, won) {
+    resultHeaderElement.textContent = `${endTitle}`;
+    resultTextElement.textContent = `${endText}`;
     // scoreElement.textContent = `${score}`;
     // resultTextElement.textContent = createShareableLink(targetWord);
     // hide play again button if daily variant

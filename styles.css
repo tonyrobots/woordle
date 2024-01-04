@@ -4,14 +4,8 @@
   text-align: center;
   /* font-family: "Roboto", sans-serif; */
   font-family: "Poppins", sans-serif;
+  margin-top: -20px;
 }
-
-#grid {
-  display: flex;
-  flex-direction: column;
-  gap: 7px; /* Space between rows */
-}
-
 h1 {
   /* set color of letters as gradient from #aaa6f4 to #eb8b60 */
   /* background: linear-gradient(90deg, #6861e2 0%, #e17445 100%);
@@ -20,7 +14,7 @@ h1 {
   /* end gradient */
 
   color: #555;
-  font-size: 32px;
+  /* font-size: ; */
   /* less space below the heading */
   margin-bottom: -10px;
 }
@@ -31,6 +25,21 @@ h1 {
   font-weight: 400;
   font-style: italic;
   margin-bottom: 13px;
+}
+
+#grid-container {
+  /* not sure this is doing anything TBH */
+  flex-grow: 1; /* Allows the grid to take up available space */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centers grid content vertically */
+  align-items: center; /* Centers grid content horizontally */
+}
+
+#grid {
+  display: flex;
+  flex-direction: column;
+  gap: 7px; /* Space between rows */
 }
 
 .row {
@@ -100,7 +109,7 @@ h1 {
   transform: translateX(-50%); /* Keep centered */
   max-width: 700px; /* Max width */
   width: calc(
-    100% - 20px
+    100% - 5px
   ); /* Full width minus desired total horizontal margin */
   padding: 3px 2px;
   box-sizing: border-box; /* Include padding and border in the width */
@@ -304,6 +313,7 @@ h1 {
 }
 
 /* share modal stuff */
+
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
@@ -320,17 +330,50 @@ h1 {
 }
 
 .modal-content {
+  /* Existing styles */
+  padding: 20px; /* Increased padding */
+  width: 90%;
+  box-sizing: border-box; /* Include padding in width calculation */
   position: relative;
   background-color: #fefefe;
   margin: 5% auto; /* X% from the top and centered */
-  /* padding: 20px; */
-  padding: 10px 60px 10px 20px; /* Adjust top and right padding */
+  /* padding: 10px 60px 10px 20px; Adjust top and right padding */
   /* padding-top: 25px; */
   border-radius: 15px;
   border: 3px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
   max-width: 700px;
   /* min-height: 300px; */
+}
+
+.close-modal-button {
+  color: #000;
+  position: absolute;
+
+  font-size: 32px;
+  font-weight: 700;
+  background-color: transparent;
+  border: 0;
+  top: 4px; /* Adjust for better spacing */
+  right: 8px; /* Adjust for better spacing */
+  font-size: 24px; /* Adjust size for mobile screens */
+}
+
+@media (max-width: 600px) {
+  .modal-content {
+    width: 95%; /* Even wider on very small screens */
+    padding: 15px; /* Adjust padding for smaller screens */
+  }
+  .close-modal-button {
+    font-size: 20px; /* Smaller close button on very small screens */
+    top: 4px; /* Adjust for better spacing */
+    right: 4px; /* Adjust for better spacing */
+  }
+}
+
+.modal-buttons button {
+  padding: 10px 15px; /* Increase padding for better touch targets */
+  margin: 10px 5px; /* Add some margin for spacing */
+  /* Add more styles as needed */
 }
 
 .modal-buttons {
@@ -375,17 +418,6 @@ h1 {
 #shareButton .fa-share-nodes {
   font-size: 20px; /* Makes the icon bigger */
   font-weight: bold; /* Makes the icon bolder */
-}
-
-.close-modal-button {
-  color: #000;
-  position: absolute;
-  top: 0px; /* Adjust as needed */
-  right: 8px; /* Adjust as needed */
-  font-size: 32px;
-  font-weight: 700;
-  background-color: transparent;
-  border: 0;
 }
 
 .mini-grid {
