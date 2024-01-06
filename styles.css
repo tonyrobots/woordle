@@ -130,6 +130,8 @@ h1 {
 }
 
 .key {
+  font-family: "Poppins", sans-serif;
+
   font-size: 1.5em;
   font-weight: bold;
   border: 0;
@@ -152,6 +154,12 @@ h1 {
 
 .key.enter {
   font-size: 1em;
+  flex: 1.3;
+}
+
+.key.backspace {
+  font-size: 1.7em;
+  flex: 1.3;
 }
 
 .key:active {

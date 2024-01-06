@@ -34,6 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const standardKeyboardLayout = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
   const alphabeticalKeyboardLayout = ["ABCDEFGHIJ", "KLMNOPQRS", "TUVWXYZ"];
 
+  const now = new Date();
+
   let wordList = [];
   let validGuesses = [];
   let targetWord = "";
@@ -112,13 +114,25 @@ document.addEventListener("DOMContentLoaded", () => {
       const lastVisitTime = lastVisitDate
         ? new Date(lastVisitDate).getTime()
         : 0;
-      const now = new Date();
+      // const now = new Date();
       const oneWeek = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
       if (!lastVisitDate || now.getTime() - lastVisitTime > oneWeek) {
         document.getElementById("helpModal").style.display = "block";
       }
 
       localStorage.setItem("lastVisitDate", now.toISOString());
+
+      // set subheader to today's date in format Month Day, Year
+      // const today = new Date();
+      const dateString = now.toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+
+      document.getElementById("subhead").textContent +=
+        "daily puzzle for " + dateString;
 
       // check if daily game has been completed today
       const dailyCompletion = JSON.parse(
@@ -132,7 +146,8 @@ document.addEventListener("DOMContentLoaded", () => {
       ) {
         // set game to ended and show completion message
         gameOver = true;
-        showCompletionMessage();
+
+        showCompletionMessage(dailyCompletion.message);
         return;
       }
     }
@@ -157,18 +172,8 @@ document.addEventListener("DOMContentLoaded", () => {
     currentAttempt = 0;
     currentInput = "";
 
+    // set target word
     if (dailyWord) {
-      // set subheader to today's date in format Month Day, Year
-      const today = new Date();
-      const dateString = today.toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-
-      document.getElementById("subhead").textContent +=
-        "daily puzzle for " + dateString;
       targetWord = getTodaysWord().toUpperCase();
     } else if (getWordFromUrl()) {
       targetWord = getWordFromUrl().toUpperCase();
@@ -380,9 +385,17 @@ document.addEventListener("DOMContentLoaded", () => {
       // Win condition
       if (correctCount === letterCount) {
         updateGridStatus(guess, statusMap);
-        // Set timeout for confetti to trigger after flip animations
+        const winMessages = [
+          "Spectacular!",
+          "Top notch!",
+          "Woohoo!",
+          "Nice one!",
+          "Not bad!",
+          "Phew!",
+        ];
+        // Set timeout for confetti/message to trigger after flip animations
         setTimeout(() => {
-          Ui.displayMessage("Woohoo!");
+          Ui.displayMessage(winMessages[guesses.length - 1]);
           Ui.triggerConfetti();
           endGame();
         }, 1000);
@@ -553,7 +566,7 @@ document.addEventListener("DOMContentLoaded", () => {
       endTitle = "Nice work!";
       endMessage = `You found the word ${targetWord} in ${
         statusMapHistory.length
-      } ${statusMapHistory.length === 1 ? "guess" : "guesses"}!`;
+      } ${statusMapHistory.length === 1 ? "guess!" : "guesses."}`;
     } else {
       endTitle = "Better luck next time.";
       endMessage = `Sorry, you failed to find the word ${targetWord} in ${statusMapHistory.length} guesses.`;
@@ -578,7 +591,7 @@ document.addEventListener("DOMContentLoaded", () => {
         variant,
         won
       );
-    }, 2000);
+    }, 2500);
 
     // add link to play again
     // const gameUrl = window.location.href.split("?")[0]; // Base URL
@@ -694,7 +707,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // show completion message, and set completed localStorage if daily variant
     if (dailyWord) {
       showCompletionMessage();
-      storeDailyCompletion();
+      storeDailyCompletion(endText);
     }
 
     resultModal.style.display = "block";
@@ -703,7 +716,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Add event listener to the share button
   // if game was lost, set score to "X"
   shareButton.addEventListener("click", () => {
-    let resultText = `${name} - ${
+    let resultText = `${name}  - ${
       gameWon ? statusMapHistory.length : "X"
     }/${maxAttempts} \n`;
     // add word to share link, unless daily variant
@@ -742,18 +755,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function storeDailyCompletion() {
+  function storeDailyCompletion(message) {
     console.log("storing daily completion");
-    const today = new Date().toDateString();
+    // const today = new Date().toDateString();
+    const today = now.toDateString();
     localStorage.setItem(
       "dailyGameCompleted",
-      JSON.stringify({ date: today, completed: true })
+      JSON.stringify({ date: today, completed: true, message: message })
     );
   }
-  function showCompletionMessage() {
-    document.getElementById("completionMessage").style.display = "block";
+  function showCompletionMessage(message = "") {
+    const completionMessage = document.getElementById("completionMessage");
+    completionMessage.style.display = "block";
+    // append the dynamic message to the completionMessage div
+    // completionMessage.innerHTML += message;
+
+    // set the p id completedMessage to the dynamic message
+    document.getElementById("completedMessage").textContent = message;
+
     document.getElementById("grid-container").style.display = "none"; // Hide the grid
-    document.getElementById("keyboard").style.display = "none"; // Hide the grid
+    document.getElementById("keyboard").style.display = "none"; // Hide the keyboard
   }
 });
 
