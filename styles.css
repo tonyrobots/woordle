@@ -51,7 +51,7 @@ h1 {
 .cell {
   width: 50px; /* Width of each cell */
   height: 50px; /* Height of each cell */
-  border: 2px solid #777;
+  border: 2px solid #aaa;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -63,7 +63,7 @@ h1 {
 }
 
 .cell-focused {
-  outline: 2px solid lightgreen;
+  outline: 2px solid rgb(67, 135, 229);
   outline-offset: -2px;
 }
 .correct {
