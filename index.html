@@ -47,6 +47,11 @@
   </head>
   <body>
     <div id="gameContainer">
+      <!-- <button id="statsButton"><i class="fa-solid fa-chart-bar"></i></button> -->
+      <div id="statsModal" class="modal">
+        <div class="modal-content" id="statsModalContent"></div>
+      </div>
+
       <h1 id="gameName">Worderly</h1>
       <div id="subhead"></div>
       <div
@@ -125,6 +130,33 @@
 
         <p id="gameScore"></p>
         <div id="resultText"></div>
+        <h3 id="statsHeader">Statistics</h3>
+        <div class="stats-grid">
+          <div class="stat" id="playedStat">
+            <div class="label">Played</div>
+            <div class="number" id="gamesPlayed"></div>
+          </div>
+          <div class="stat" id="winsStat">
+            <div class="label">Wins</div>
+            <div class="number" id="wins"></div>
+          </div>
+          <div class="stat" id="winPercentStat">
+            <div class="label">Win Rate</div>
+            <div class="number" id="winPercent"></div>
+          </div>
+          <div class="stat" id="currentStreakStat">
+            <div class="label">Current Streak</div>
+
+            <div class="number" id="currentStreak"></div>
+          </div>
+          <div class="stat" id="maxStreakStat">
+            <div class="label">Longest Streak</div>
+            <div class="number" id="maxStreak"></div>
+          </div>
+        </div>
+        <h4>Guess Distribution</h4>
+        <div id="guessDistribution" class="distribution"></div>
+
         <div class="modal-buttons">
           <button id="shareButton">
             SHARE RESULT

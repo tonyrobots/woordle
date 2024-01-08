@@ -571,6 +571,9 @@ document.addEventListener("DOMContentLoaded", () => {
       endTitle = "Better luck next time.";
       endMessage = `Sorry, you failed to find the word ${targetWord} in ${statusMapHistory.length} guesses.`;
     }
+    // update stats
+    updateStats(won, statusMapHistory.length, variant);
+    populateStatsHTML(variant);
 
     // event tracking
     gtag("event", "game_end", {
@@ -775,6 +778,79 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("grid-container").style.display = "none"; // Hide the grid
     document.getElementById("keyboard").style.display = "none"; // Hide the keyboard
+  }
+
+  function updateStats(isWin, guessCount, variant = "daily") {
+    const statsName = "worderlyStats-" + variant;
+    // Retrieve existing stats or initialize if not present
+    let stats = JSON.parse(localStorage.getItem(statsName)) || {
+      gamesPlayed: 0,
+      wins: 0,
+      guessDistribution: Array(7).fill(0), // Indices 1-6 for guesses, index 0 for losses
+      currentStreak: 0,
+      longestStreak: 0,
+      playerSince: now.toISOString().split("T")[0], // Only set this once
+    };
+
+    // Update stats
+    stats.gamesPlayed++;
+    if (isWin) {
+      stats.wins++;
+      stats.guessDistribution[guessCount]++;
+      stats.currentStreak++;
+      stats.longestStreak = Math.max(stats.longestStreak, stats.currentStreak);
+    } else {
+      stats.guessDistribution[0]++; // Increment losses
+      stats.currentStreak = 0;
+    }
+
+    localStorage.setItem(statsName, JSON.stringify(stats));
+  }
+
+  function populateStatsHTML(variant = "daily") {
+    const stats = JSON.parse(localStorage.getItem("worderlyStats-" + variant));
+    if ((variant = "alpha")) {
+      document.getElementById("statsHeader").textContent =
+        "Practice Statistics";
+    }
+
+    if (stats) {
+      // Update simple stats
+      document.getElementById("gamesPlayed").textContent = stats.gamesPlayed;
+      document.getElementById("wins").textContent = stats.wins;
+
+      document.getElementById("winPercent").textContent =
+        ((stats.wins / stats.gamesPlayed) * 100).toFixed(0) + "%";
+      document.getElementById("currentStreak").textContent =
+        stats.currentStreak;
+      document.getElementById("maxStreak").textContent = stats.longestStreak;
+
+      // Update guess distribution histogram
+      const guessDistributionContainer =
+        document.getElementById("guessDistribution");
+      guessDistributionContainer.innerHTML = ""; // Clear previous bars
+      stats.guessDistribution.forEach((count, index) => {
+        // skip losses
+        if (index === 0) {
+          return;
+        }
+        const bar = document.createElement("div");
+        bar.className = "bar";
+        const label = document.createElement("span");
+        label.textContent = index;
+        const progressBar = document.createElement("div");
+        progressBar.className = "progress";
+        progressBar.style.width = `${
+          (count / Math.max(...stats.guessDistribution)) * 100
+        }%`; // Scale based on max
+        if (count > 0) {
+          progressBar.textContent = count;
+        }
+        bar.appendChild(label);
+        bar.appendChild(progressBar);
+        guessDistributionContainer.appendChild(bar);
+      });
+    }
   }
 });
 

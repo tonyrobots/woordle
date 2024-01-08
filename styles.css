@@ -19,6 +19,10 @@ h1 {
   margin-bottom: -10px;
 }
 
+h3 {
+  font-size: 1.2em;
+  margin-bottom: -1px;
+}
 #subhead {
   color: #999;
   font-size: 16px;
@@ -456,4 +460,77 @@ h1 {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+}
+/* // stats */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columns for larger screens */
+  gap: 10px;
+}
+
+.stat {
+  /* margin: 10px 0; */
+  /* center; */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center horizontally */
+  justify-content: center; /* Center vertically */
+  height: 100%; /* Give it a height to allow for vertical centering */
+}
+
+.number {
+  font-size: 2em;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.label {
+  font-size: 0.85em;
+}
+
+.distribution {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align bars to the left */
+  gap: 5px; /* Space between rows */
+  margin-top: 20px;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.bar > span {
+  font-size: 1em;
+  margin-right: 5px;
+}
+
+.progress {
+  background-color: #ccc;
+  height: 20px; /* Height of the progress bar */
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  transition: width 0.5s ease-in-out;
+}
+
+@media (max-width: 600px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns for small screens */
+  }
+  .progress {
+    font-size: 0.8em; /* Smaller font size for small screens */
+    height: 16px;
+  }
+  .number {
+    font-size: 1.1em; /* Smaller font size for small screens */
+  }
+  #winsStat {
+    display: none; /* Hide wins on small screens */
+  }
 }
