@@ -334,6 +334,9 @@ document.addEventListener("DOMContentLoaded", () => {
       // add guess to guesses array
       guesses.push(guess);
 
+      // console feedback for Alex's solver
+      let consoleFeedback = "";
+
       if (feedbackStyle === "alphabetical") {
         // Alphabetical variant logic
         updateKeyboardForLetterPosition(0);
@@ -344,11 +347,15 @@ document.addEventListener("DOMContentLoaded", () => {
           if (guessedLetter === correctLetter) {
             statusMap[i] = "correct";
             correctCount++;
+            consoleFeedback += "0";
           } else if (guessedLetter < correctLetter) {
             statusMap[i] = "bef"; // Guessed letter comes before alphabetically
+            consoleFeedback += "1";
           } else {
             statusMap[i] = "aft"; // Guessed letter comes after alphabetically
+            consoleFeedback += "-1";
           }
+          consoleFeedback += ",";
         }
       } else {
         // First pass: Mark correct letters
@@ -414,6 +421,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (feedbackStyle === "alphabetical") {
         updateLetterRanges(guess, statusMap, currentAttempt % letterCount);
+        // remove trailing "," from consoleFeedback
+        consoleFeedback = consoleFeedback.slice(0, -1);
+        console.log(consoleFeedback);
       }
     }
   }
