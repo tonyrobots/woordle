@@ -819,7 +819,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function populateStatsHTML(variant = "daily") {
     const stats = JSON.parse(localStorage.getItem("worderlyStats-" + variant));
-    if ((variant = "alpha")) {
+    if (variant === "alpha") {
       document.getElementById("statsHeader").textContent =
         "Practice Statistics";
     }
