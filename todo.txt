@@ -1,5 +1,9 @@
-fix keyboard status for standard feedback version
-add share
-add play again
-add ability to select variant (partially done)
+fix keyboard status for standard feedback version - done
+add share - done
+add play again - done
+add ability to select variant (partially done) 
+
+fix button height of practice mode and share buttons on completion screen
+fix win messages for variants with more than 6 max_guesses
 spacebar or arrowkeys to move "cursor" focus
+

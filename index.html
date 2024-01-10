@@ -65,11 +65,12 @@
           Come back tomorrow for another daily puzzle - or try practice mode,
           and play all you'd like!
         </p>
-        <a href="?v=2" class="practice-mode-button">Practice Mode</a>
-        <button id="modalShareButton" class="share-button">
-          SHARE RESULT
-          <i class="fa-solid fa-share-nodes"></i>
-        </button>
+        <div class="button-row">
+          <a href="?v=2" class="practice-mode-button button">Practice Mode</a>
+          <button id="modalShareButton" class="share-button button">
+            Share Result <i class="fa-solid fa-share-nodes"></i>
+          </button>
+        </div>
       </div>
       <div id="grid-container">
         <div id="grid"></div>
@@ -161,12 +162,14 @@
         <h4>Guess Distribution</h4>
         <div id="guessDistribution" class="distribution"></div>
 
-        <div class="modal-buttons">
-          <button id="modalShareButton" class="share-button">
+        <div class="button-row">
+          <button id="modalShareButton" class="share-button button">
             SHARE RESULT
             <i class="fa-solid fa-share-nodes"></i>
           </button>
-          <button id="playAgainButton">Play Again</button>
+          <button id="playAgainButton" class="button play-again-button">
+            Play Again
+          </button>
         </div>
       </div>
     </div>

@@ -386,43 +386,46 @@ h3 {
   }
 }
 
-.modal-buttons button {
-  padding: 10px 15px; /* Increase padding for better touch targets */
-  margin: 10px 5px; /* Add some margin for spacing */
-  /* Add more styles as needed */
-}
+/* button stuff */
 
-.modal-buttons {
+.button-row {
   display: flex;
   justify-content: space-around; /* Adjust as needed */
   padding: 10px 0;
 }
 
-#playAgainButton,
-.share-button {
-  padding: 10px 20px;
-  margin: 10px; /* Spacing between buttons */
+.button {
+  /* padding: 10px 20px; */
+  /* margin: 10px; Spacing between buttons */
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  /* Add more styling as needed */
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  text-decoration: none;
 }
 
-/* Additional styling for individual buttons if needed */
+.practice-mode-button {
+  background-color: #4c84af;
+  color: white;
+  gap: 15px;
+}
+
+.practice-mode-button:hover {
+  background-color: #245a83; /* Darker shade on hover */
+}
 
 .share-button {
   background-color: #4caf50; /* Green background */
   color: white; /* White text */
-  padding: 10px 20px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   gap: 15px;
 }
 
-#shareButton:hover {
+.share-button:hover {
   background-color: #45a049; /* Darker shade on hover */
 }
 
@@ -431,7 +434,7 @@ h3 {
   /* You can add more styling for the icon here */
 }
 
-#shareButton .fa-share-nodes {
+.fa-share-nodes {
   font-size: 20px; /* Makes the icon bigger */
   font-weight: bold; /* Makes the icon bolder */
 }
@@ -440,17 +443,6 @@ h3 {
   text-align: center;
   padding: 20px;
 }
-
-.practice-mode-button {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 10px 15px;
-  background-color: #4c84af;
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;
-}
-
 .mini-grid {
   display: inline-flex;
   margin-right: 10px; /* Space between grid and text */
