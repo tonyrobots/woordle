@@ -87,7 +87,6 @@ ankle
 annex
 annoy
 annul
-anode
 antic
 anvil
 aorta
@@ -145,13 +144,11 @@ badly
 bagel
 baggy
 baker
-baler
 balmy
 banal
 banjo
 barge
 baron
-basal
 basic
 basil
 basin
@@ -186,7 +183,6 @@ beret
 berry
 berth
 beset
-betel
 bevel
 bezel
 bible
@@ -194,14 +190,12 @@ bicep
 biddy
 bigot
 bilge
-billy
 binge
 bingo
 biome
 birch
 birth
 bison
-bitty
 black
 blade
 blame
@@ -240,7 +234,6 @@ bobby
 boney
 bongo
 bonus
-booby
 boost
 booth
 booty
@@ -331,7 +324,6 @@ canny
 canoe
 canon
 caper
-caput
 carat
 cargo
 carol
@@ -343,7 +335,6 @@ cater
 catty
 caulk
 cause
-cavil
 cease
 cedar
 cello
@@ -488,13 +479,11 @@ crone
 crony
 crook
 cross
-croup
 crowd
 crown
 crude
 cruel
 crumb
-crump
 crush
 crust
 crypt
@@ -853,7 +842,6 @@ ghost
 ghoul
 giant
 giddy
-gipsy
 girly
 girth
 given
@@ -943,7 +931,6 @@ gummy
 guppy
 gusto
 gusty
-gypsy
 habit
 hairy
 halve
@@ -1001,13 +988,11 @@ howdy
 human
 humid
 humor
-humph
 humus
 hunch
 hunky
 hurry
 husky
-hussy
 hutch
 hydro
 hyena
@@ -1065,9 +1050,7 @@ juicy
 jumbo
 jumpy
 junta
-junto
 juror
-kappa
 karma
 kayak
 kebab
@@ -1108,7 +1091,6 @@ layer
 leach
 leafy
 leaky
-leant
 leapt
 learn
 lease
@@ -1202,7 +1184,6 @@ march
 marry
 marsh
 mason
-masse
 match
 matey
 mauve
@@ -1233,7 +1214,6 @@ milky
 mimic
 mince
 miner
-minim
 minor
 minty
 minus
@@ -1364,10 +1344,8 @@ paddy
 pagan
 paint
 paler
-palsy
 panel
 panic
-pansy
 papal
 paper
 parer
@@ -2075,7 +2053,6 @@ today
 toddy
 token
 tonal
-tonga
 tonic
 tooth
 topaz
@@ -2143,7 +2120,6 @@ twice
 twine
 twirl
 twist
-twixt
 tying
 udder
 ulcer
@@ -2176,7 +2152,6 @@ usher
 using
 usual
 usurp
-utile
 utter
 vague
 valet
@@ -2313,3 +2288,4 @@ youth
 zebra
 zesty
 zonal
+yummy

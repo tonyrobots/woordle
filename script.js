@@ -707,7 +707,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const scoreElement = document.getElementById("gameScore");
   const resultHeaderElement = document.getElementById("resultHeader");
   const resultTextElement = document.getElementById("resultText");
-  const shareButton = document.getElementById("shareButton");
+  // const shareButton = document.getElementById("shareButton");
 
   // Function to show the modal with the game's score
   function showResultModal(endTitle, endText, guesses, variant, won) {
@@ -728,9 +728,19 @@ document.addEventListener("DOMContentLoaded", () => {
     resultModal.style.display = "block";
   }
 
-  // Add event listener to the share button
-  // if game was lost, set score to "X"
-  shareButton.addEventListener("click", () => {
+  // Add event listener to the share buttons
+  const shareButtons = document.querySelectorAll(".share-button");
+  shareButtons.forEach((button) => {
+    button.addEventListener("click", shareClicked);
+  });
+
+  // shareButton.addEventListener("click", () => {
+  //   shareClicked();
+  // });
+
+  function shareClicked(event) {
+    // needs name, gameWon, statusMapHistory, maxAttempts, targetWord, feedbackStyle
+    // of which, only gameWon and statusMapHistory should be needed
     let resultText = `${name}  - ${
       gameWon ? statusMapHistory.length : "X"
     }/${maxAttempts} \n`;
@@ -739,21 +749,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!dailyWord) {
       shareWord = targetWord;
     }
-
-    // let resultText = generateResultText(
-    //   name,
-    //   gameWon,
-    //   statusMapHistory,
-    //   feedbackStyle
-    // );
-
     resultText += generateResultText(
       shareWord,
       statusMapHistory,
       feedbackStyle
     );
     shareGame(resultText, shareWord);
-  });
+  }
 
   // add event listener to the play again button
   document.getElementById("playAgainButton").addEventListener("click", () => {

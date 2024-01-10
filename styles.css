@@ -399,7 +399,7 @@ h3 {
 }
 
 #playAgainButton,
-#shareButton {
+.share-button {
   padding: 10px 20px;
   margin: 10px; /* Spacing between buttons */
   border: none;
@@ -411,7 +411,7 @@ h3 {
 
 /* Additional styling for individual buttons if needed */
 
-#shareButton {
+.share-button {
   background-color: #4caf50; /* Green background */
   color: white; /* White text */
   padding: 10px 20px;
@@ -445,7 +445,7 @@ h3 {
   display: inline-block;
   margin-top: 10px;
   padding: 10px 15px;
-  background-color: #4caf50;
+  background-color: #4c84af;
   color: white;
   text-decoration: none;
   border-radius: 5px;
