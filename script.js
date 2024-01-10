@@ -749,7 +749,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let resultText =
       `${name}, ` +
       now.toLocaleDateString("en-US", { month: "short", day: "numeric" }) +
-      `- ${gameWon ? statusMapHistory.length : "X"}/${maxAttempts} \n`;
+      ` - ${gameWon ? statusMapHistory.length : "X"}/${maxAttempts} \n`;
     // add word to share link, unless daily variant
     let shareWord = "";
     if (!dailyWord) {
