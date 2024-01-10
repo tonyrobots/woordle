@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .fill()
     .map(() => ({ min: "@", max: "[" })); // set min and max outside the A-Z range
 
-  document.title = name + " - a Wordle Variant";
+  document.title = name;
   document.getElementById("gameName").textContent = name.toUpperCase();
 
   createGrid(letterCount, maxAttempts);
@@ -107,7 +107,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", handleKeyPress);
 
   function startGame() {
-    // first make sure the game hasn't already been completed today, if daily variant
     if (variant == "alpha-daily") {
       // show help modal if it's been more than a week since last visit
       const lastVisitDate = localStorage.getItem("lastVisitDate");
@@ -148,6 +147,9 @@ document.addEventListener("DOMContentLoaded", () => {
         gameOver = true;
 
         showCompletionMessage(dailyCompletion.message);
+        // also show results modal
+        // populateStatsHTML(variant);
+        // showResultModal("title", "message", guesses, variant, true);
         return;
       }
     }
@@ -737,6 +739,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!dailyWord) {
       shareWord = targetWord;
     }
+
+    // let resultText = generateResultText(
+    //   name,
+    //   gameWon,
+    //   statusMapHistory,
+    //   feedbackStyle
+    // );
+
     resultText += generateResultText(
       shareWord,
       statusMapHistory,
