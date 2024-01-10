@@ -741,9 +741,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function shareClicked(event) {
     // needs name, gameWon, statusMapHistory, maxAttempts, targetWord, feedbackStyle
     // of which, only gameWon and statusMapHistory should be needed
-    let resultText = `${name}  - ${
-      gameWon ? statusMapHistory.length : "X"
-    }/${maxAttempts} \n`;
+    let resultText =
+      `${name}, ` +
+      now.toLocaleDateString("en-US", { month: "short", day: "numeric" }) +
+      `- ${gameWon ? statusMapHistory.length : "X"}/${maxAttempts} \n`;
     // add word to share link, unless daily variant
     let shareWord = "";
     if (!dailyWord) {
