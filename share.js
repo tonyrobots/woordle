@@ -46,13 +46,16 @@ export function createShareableLink(word = "") {
 
   let shareUrl = baseUrl;
 
+  // add utm parameters
+  shareUrl += "?utm_source=web&utm_medium=share";
+
   if (variant) {
-    shareUrl += `?v=${variant}`; // Include the variant parameter if it exists
+    shareUrl += `&v=${variant}`; // Include the variant parameter if it exists
   }
 
   if (word !== "") {
-    // Append the word parameter, with an '&' if the variant parameter exists, '?' otherwise
-    shareUrl += `${variant ? "&" : "?"}w=${encodedWord}`;
+    // Append the word parameter
+    shareUrl += `&w=${encodedWord}`;
   }
 
   return shareUrl;
