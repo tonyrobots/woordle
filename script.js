@@ -147,6 +147,11 @@ document.addEventListener("DOMContentLoaded", () => {
         gameOver = true;
 
         showCompletionMessage(dailyCompletion.message);
+        // get game state from localStorage
+        guesses = dailyCompletion.guesses;
+        statusMapHistory = dailyCompletion.statusMapHistory;
+        gameWon = dailyCompletion.won;
+
         // also show results modal
         // populateStatsHTML(variant);
         // showResultModal("title", "message", guesses, variant, true);
@@ -722,7 +727,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // show completion message, and set completed localStorage if daily variant
     if (dailyWord) {
       showCompletionMessage();
-      storeDailyCompletion(endText);
+      storeDailyCompletion(endText, won, guesses, statusMapHistory);
     }
 
     resultModal.style.display = "block";
@@ -781,13 +786,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function storeDailyCompletion(message) {
+  function storeDailyCompletion(message, won, guesses, statusMapHistory) {
     console.log("storing daily completion");
     // const today = new Date().toDateString();
     const today = now.toDateString();
     localStorage.setItem(
       "dailyGameCompleted",
-      JSON.stringify({ date: today, completed: true, message: message })
+      JSON.stringify({
+        date: today,
+        completed: true,
+        message: message,
+        won: won,
+        guesses: guesses,
+        statusMapHistory: statusMapHistory,
+      })
     );
   }
   function showCompletionMessage(message = "") {
