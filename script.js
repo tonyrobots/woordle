@@ -87,7 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
     .then((response) => response.text())
     .then((text) => {
       wordList = text.split("\n").map((word) => word.trim().toUpperCase());
-      startGame();
     })
     .catch((err) => console.error("Failed to load word list:", err));
 
@@ -100,13 +99,30 @@ document.addEventListener("DOMContentLoaded", () => {
           .split("\n")
           .map((word) => word.trim().toUpperCase());
         console.log(validGuesses.length + " valid guesses loaded");
+        startGame();
       })
       .catch((err) => console.error("Failed to load valid guesses list:", err));
   }
 
   document.addEventListener("keydown", handleKeyPress);
 
+  function InitializeGameState() {
+    targetWord = "";
+    currentAttempt = 0;
+    currentInput = "";
+    focusCellIndex = 0;
+    statusMapHistory = [];
+    guesses = [];
+    gameOver = false;
+    gameWon = false;
+    //letter range?
+
+    currentAttempt = 0;
+    currentInput = "";
+  }
+
   function startGame() {
+    InitializeGameState();
     if (variant == "alpha-daily") {
       // show help modal if it's been more than a week since last visit
       const lastVisitDate = localStorage.getItem("lastVisitDate");
@@ -139,23 +155,28 @@ document.addEventListener("DOMContentLoaded", () => {
       );
       const today = now.toDateString();
       if (
+        // game state is present for today's puzzle
         dailyCompletion &&
-        dailyCompletion.date === today &&
-        dailyCompletion.completed
+        dailyCompletion.date === today
       ) {
-        // set game to ended and show completion message
-        gameOver = true;
+        // if game is not completed, restore game state
+        if (!dailyCompletion.completed) {
+          restoreGameState(dailyCompletion);
+        } else {
+          // set game to ended and show completion message
+          gameOver = true;
 
-        showCompletionMessage(dailyCompletion.message);
-        // get game state from localStorage
-        guesses = dailyCompletion.guesses;
-        statusMapHistory = dailyCompletion.statusMapHistory;
-        gameWon = dailyCompletion.won;
+          showCompletionMessage(dailyCompletion.message);
+          // get game state from localStorage
+          guesses = dailyCompletion.guesses;
+          statusMapHistory = dailyCompletion.statusMapHistory;
+          gameWon = dailyCompletion.won;
 
-        // also show results modal
-        // populateStatsHTML(variant);
-        // showResultModal("title", "message", guesses, variant, true);
-        return;
+          // also show results modal
+          // populateStatsHTML(variant);
+          // showResultModal("title", "message", guesses, variant, true);
+          return;
+        }
       }
     }
 
@@ -166,19 +187,14 @@ document.addEventListener("DOMContentLoaded", () => {
       game_variant: variant,
       game_name: name,
     });
-    targetWord = "";
-    currentAttempt = 0;
-    currentInput = "";
-    focusCellIndex = 0;
-    statusMapHistory = [];
-    guesses = [];
-    gameOver = false;
-    gameWon = false;
-    //letter range?
 
-    currentAttempt = 0;
-    currentInput = "";
+    setTargetWord();
+    // console.log(targetWord);
+    clearGrid();
+    clearKeyboard();
+  }
 
+  function setTargetWord() {
     // set target word
     if (dailyWord) {
       targetWord = getTodaysWord().toUpperCase();
@@ -187,12 +203,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       targetWord = getRandomWord();
     }
-    // console.log(targetWord);
-    clearGrid();
-    clearKeyboard();
-
-    // Additional initialization logic can go here
-    gameOver = false; // Reset game state when starting a new game
   }
 
   function getRandomWord() {
@@ -204,6 +214,23 @@ document.addEventListener("DOMContentLoaded", () => {
   function getTodaysWord() {
     const index = Ui.getTodaysWordIndex() % wordList.length; // Use modulo to loop back to start
     return wordList[index];
+  }
+
+  function restoreGameState(gameState) {
+    // restore game state
+    gameOver = gameState.completed;
+    gameWon = gameState.won;
+    guesses = gameState.guesses;
+    statusMapHistory = gameState.statusMapHistory;
+    currentAttempt = guesses.length;
+
+    // iterate through guesses to update keyboard and grid
+    guesses.forEach((guess) => {
+      console.log("restoring guess: ", guess);
+      updateGrid();
+      currentInput = guess;
+      submitGuess(guess, false);
+    });
   }
 
   function clearGrid() {
@@ -323,7 +350,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function submitGuess(guess) {
+  function submitGuess(guess, saveState = true) {
     if (!gameOver && currentAttempt < maxAttempts) {
       let statusMap = {};
       let targetWordCopy = targetWord;
@@ -411,11 +438,22 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
           Ui.displayMessage(winMessages[guesses.length - 1]);
           Ui.triggerConfetti();
-          endGame();
+          endGame(true);
         }, 1000);
         return;
       }
       updateGridStatus(guess, statusMap);
+
+      //save game state
+      if (saveState) {
+        storeGameState(
+          `Picking up where you left off...`,
+          gameOver,
+          gameWon,
+          guesses,
+          statusMapHistory
+        );
+      }
 
       currentAttempt++;
       if (currentAttempt === maxAttempts) {
@@ -574,7 +612,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  function endGame(won = true) {
+  function endGame(won) {
     gameOver = true; // Set gameOver to true when the game ends
     gameWon = won;
     let endMessage,
@@ -727,7 +765,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // show completion message, and set completed localStorage if daily variant
     if (dailyWord) {
       showCompletionMessage();
-      storeDailyCompletion(endText, won, guesses, statusMapHistory);
+      storeGameState(endText, gameOver, won, guesses, statusMapHistory);
     }
 
     resultModal.style.display = "block";
@@ -786,15 +824,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function storeDailyCompletion(message, won, guesses, statusMapHistory) {
-    console.log("storing daily completion");
+  function storeGameState(message, gameOver, won, guesses, statusMapHistory) {
+    console.log("storing game state");
     // const today = new Date().toDateString();
     const today = now.toDateString();
     localStorage.setItem(
       "dailyGameCompleted",
       JSON.stringify({
         date: today,
-        completed: true,
+        completed: gameOver,
         message: message,
         won: won,
         guesses: guesses,
