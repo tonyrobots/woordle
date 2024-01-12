@@ -116,9 +116,6 @@ document.addEventListener("DOMContentLoaded", () => {
     gameOver = false;
     gameWon = false;
     //letter range?
-
-    currentAttempt = 0;
-    currentInput = "";
   }
 
   function startGame() {
@@ -220,18 +217,55 @@ document.addEventListener("DOMContentLoaded", () => {
     // restore game state
     gameOver = gameState.completed;
     gameWon = gameState.won;
-    guesses = gameState.guesses;
-    statusMapHistory = gameState.statusMapHistory;
-    currentAttempt = guesses.length;
+    currentAttempt = 0;
+    currentInput = "";
+
+    setTargetWord();
+
+    // guesses = gameState.guesses;
+    // statusMapHistory = gameState.statusMapHistory;
+    // currentAttempt = guesses.length;
 
     // iterate through guesses to update keyboard and grid
-    guesses.forEach((guess) => {
+    gameState.guesses.forEach((guess) => {
       console.log("restoring guess: ", guess);
-      updateGrid();
-      currentInput = guess;
-      submitGuess(guess, false);
+      // updateGrid();
+      currentInput = "";
+      // split each guess into individual letters and submit as keypresses
+      guess.split("").forEach((letter, index) => {
+        // pause for 100ms between each letter
+        setTimeout(() => {
+          handleKeyPress({ key: letter.trim() });
+        }, 100);
+      });
+      setTimeout(() => {
+        handleKeyPress({ key: "Enter" });
+      }, 100);
+    });
+
+    // tag game restore event
+    gtag("event", "game_restore", {
+      event_category: "Game",
+      event_label: "Restore",
+      game_variant: variant,
+      game_name: name,
     });
   }
+
+  // function restoreGameState(gameState) {
+  //   gameOver = gameState.completed;
+  //   gameWon = gameState.won;
+  //   guesses = gameState.guesses;
+  //   statusMapHistory = gameState.statusMapHistory;
+  //   currentAttempt = guesses.length;
+
+  //   // iterate through each restored guess to fill grid with letters and feedback
+  //   guesses.forEach((guess, index) => {
+  //     currentInput = guess;
+  //     updateGrid();
+  //     updateGridStatus(guess, statusMapHistory[index]);
+  //   });
+  // }
 
   function clearGrid() {
     for (let i = 0; i < maxAttempts; i++) {
@@ -334,6 +368,7 @@ document.addEventListener("DOMContentLoaded", () => {
     for (let i = 0; i < letterCount; i++) {
       const cellId = `cell${currentAttempt}-${i}`;
       const cell = document.getElementById(cellId);
+      console.log("updating cell: " + cellId + " with " + currentInput[i]);
 
       if (cell) {
         const front = cell.querySelector(".front");
@@ -423,9 +458,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       statusMapHistory.push(statusMap);
 
+      updateGridStatus(guess, statusMap);
+
       // Win condition
       if (correctCount === letterCount) {
-        updateGridStatus(guess, statusMap);
         const winMessages = [
           "Spectacular!",
           "Top notch!",
@@ -442,7 +478,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 1000);
         return;
       }
-      updateGridStatus(guess, statusMap);
 
       //save game state
       if (saveState) {
