@@ -858,6 +858,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function storeGameState(message, gameOver, won, guesses, statusMapHistory) {
+    if (!dailyWord) {
+      // only store game state for daily game
+      return;
+    }
     console.log("storing game state");
     // const today = new Date().toDateString();
     const today = now.toDateString();
