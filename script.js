@@ -900,7 +900,7 @@ document.addEventListener("DOMContentLoaded", () => {
       currentStreak: 0,
       longestStreak: 0,
       lastWinDate: null,
-      playerSince: now.toISOString().split("T")[0], // Only set this once
+      playerSince: now.toISOString().split("T")[0], // Only set this once -- NOTE this is UTC! convert to local time before displaying
     };
 
     // Update stats
