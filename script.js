@@ -126,7 +126,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const lastVisitTime = lastVisitDate
         ? new Date(lastVisitDate).getTime()
         : 0;
-      // const now = new Date();
       const oneWeek = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
       if (!lastVisitDate || now.getTime() - lastVisitTime > oneWeek) {
         document.getElementById("helpModal").style.display = "block";
@@ -368,7 +367,6 @@ document.addEventListener("DOMContentLoaded", () => {
     for (let i = 0; i < letterCount; i++) {
       const cellId = `cell${currentAttempt}-${i}`;
       const cell = document.getElementById(cellId);
-      console.log("updating cell: " + cellId + " with " + currentInput[i]);
 
       if (cell) {
         const front = cell.querySelector(".front");
@@ -897,6 +895,7 @@ document.addEventListener("DOMContentLoaded", () => {
       guessDistribution: Array(7).fill(0), // Indices 1-6 for guesses, index 0 for losses
       currentStreak: 0,
       longestStreak: 0,
+      lastWinDate: null,
       playerSince: now.toISOString().split("T")[0], // Only set this once
     };
 
@@ -905,13 +904,28 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isWin) {
       stats.wins++;
       stats.guessDistribution[guessCount]++;
+      // if player's last win was before yesterday, reset current streak
+      const yesterday = new Date();
+      yesterday.setDate(now.getDate() - 1);
+      const yesterdayString = yesterday.toDateString();
+
+      // console.log("yesterday: ", yesterdayString);
+      // console.log("last win date: ", stats.lastWinDate);
+      if (
+        // if last win wasn't yesterday (or today for testing), break streak
+        stats.lastWinDate != yesterdayString &&
+        stats.lastWinDate != now.toDateString()
+      ) {
+        // console.log("streak broken - last win was before yesterday");
+        // stats.currentStreak = 0; // uncomment after a day or more so users can get their last win set
+      }
       stats.currentStreak++;
       stats.longestStreak = Math.max(stats.longestStreak, stats.currentStreak);
+      stats.lastWinDate = now.toDateString();
     } else {
       stats.guessDistribution[0]++; // Increment losses
       stats.currentStreak = 0;
     }
-
     localStorage.setItem(statsName, JSON.stringify(stats));
   }
 
