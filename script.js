@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let letterCount = 5;
   let feedbackStyle = "standard";
   let name = "Wordlish";
-  let dailyWord = false;
+  let dailyWord = false; // whether the game is a daily puzzle
   let requireValidGuesses = true;
 
   // override with variant settings
@@ -908,7 +908,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isWin) {
       stats.wins++;
       stats.guessDistribution[guessCount]++;
-      // if player's last win was before yesterday, reset current streak
+      // if player's last win was before yesterday, and game type is daily, reset current streak
       const yesterday = new Date();
       yesterday.setDate(now.getDate() - 1);
       const yesterdayString = yesterday.toDateString();
@@ -918,7 +918,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (
         // if last win wasn't yesterday (or today for testing), break streak
         stats.lastWinDate != yesterdayString &&
-        stats.lastWinDate != now.toDateString()
+        stats.lastWinDate != now.toDateString() &&
+        dailyWord
       ) {
         // console.log("streak broken - last win was before yesterday");
         stats.currentStreak = 0;
@@ -933,7 +934,7 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem(statsName, JSON.stringify(stats));
   }
 
-  function populateStatsHTML(variant = "daily") {
+  function populateStatsHTML(variant) {
     const stats = JSON.parse(localStorage.getItem("worderlyStats-" + variant));
     if (variant === "alpha") {
       document.getElementById("statsHeader").textContent =
