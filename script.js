@@ -921,7 +921,7 @@ document.addEventListener("DOMContentLoaded", () => {
         stats.lastWinDate != now.toDateString()
       ) {
         // console.log("streak broken - last win was before yesterday");
-        // stats.currentStreak = 0; // uncomment after a day or more so users can get their last win set
+        stats.currentStreak = 0;
       }
       stats.currentStreak++;
       stats.longestStreak = Math.max(stats.longestStreak, stats.currentStreak);
