@@ -385,6 +385,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function submitGuess(guess, saveState = true) {
     if (!gameOver && currentAttempt < maxAttempts) {
+      if (targetWord === "") {
+        console.error("Oops, target word is empty, reloading page");
+        // reload the page (could instead try re-setting the word?)
+        location.reload();
+        return;
+      }
       let statusMap = {};
       let targetWordCopy = targetWord;
       let correctCount = 0;
