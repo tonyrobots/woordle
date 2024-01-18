@@ -81,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   createGrid(letterCount, maxAttempts);
   generateKeyboardLayout();
+  generateAlphabetHelper();
 
   // load wordlist_{letterCount}.txt
   fetch("wordlists/wordlist_" + letterCount + ".txt")
@@ -346,6 +347,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // focusCellIndex = currentInput.length;
     if (focusCellIndex < letterCount) {
       updateKeyboardForLetterPosition(focusCellIndex);
+      updateAlphabetHelperForLetterPosition(focusCellIndex);
     }
   }
   function handleKeyClick(keyValue) {
@@ -413,6 +415,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (feedbackStyle === "alphabetical") {
         // Alphabetical variant logic
         updateKeyboardForLetterPosition(0);
+        updateAlphabetHelperForLetterPosition(0);
 
         for (let i = 0; i < letterCount; i++) {
           const guessedLetter = guess[i];
@@ -605,6 +608,34 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function updateAlphabetHelperForLetterPosition(currentPosition) {
+    if (feedbackStyle !== "alphabetical") return;
+    const currentRange = letterRanges[currentPosition];
+    document.querySelectorAll(".letter").forEach((helperLetter) => {
+      const letter = helperLetter.textContent;
+      if (letter !== "Enter" && letter !== "⌫") {
+        if (letter <= currentRange.min || letter >= currentRange.max) {
+          helperLetter.classList.add("impossible"); // Highlight as impossible
+          //hide this helperLetter
+          helperLetter.style.display = "none";
+        } else {
+          helperLetter.classList.remove("impossible");
+          helperLetter.classList.remove("correct");
+          // show this helperLetter
+          helperLetter.style.display = "block";
+        }
+        if (currentRange.min === currentRange.max) {
+          if (currentRange.min === letter) {
+            helperLetter.classList.add("correct"); // Highlight as correct
+            helperLetter.classList.remove("impossible");
+          } else {
+            helperLetter.classList.add("impossible"); // Highlight as impossible
+          }
+        }
+      }
+    });
+  }
+
   function getFocusedCell() {
     return document.getElementById(`cell${currentAttempt}-${focusCellIndex}`);
   }
@@ -641,6 +672,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     updateKeyboardForLetterPosition(focusCellIndex);
+    updateAlphabetHelperForLetterPosition(focusCellIndex);
   }
 
   function replaceAt(string, index, replacement) {
@@ -772,6 +804,20 @@ document.addEventListener("DOMContentLoaded", () => {
         rowDiv.appendChild(backspaceKey);
       }
       keyboardContainer.appendChild(rowDiv);
+    });
+  }
+
+  function generateAlphabetHelper() {
+    const alphabetHelper = document.getElementById("alphabetHelper");
+    alphabetHelper.innerHTML = ""; // Clear existing alphabet helper
+
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    alphabet.split("").forEach((letter) => {
+      const letterDiv = document.createElement("div");
+      letterDiv.className = "letter";
+      letterDiv.textContent = letter;
+      letterDiv.id = `letter-${letter}`;
+      alphabetHelper.appendChild(letterDiv);
     });
   }
 

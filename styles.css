@@ -171,6 +171,20 @@ h3 {
   transform: scale(0.95); /* Slightly shrink key when pressed */
 }
 
+#alphabetHelper {
+  font-size: 0.8em;
+  font-weight: normal;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  font-size: medium;
+}
+
+.letter {
+  margin: 0 2px;
+  transition: background-color 0.5s ease-in-out;
+}
+
 /* Add classes for different letter statuses: correct, present, incorrect */
 
 .incorrect {
