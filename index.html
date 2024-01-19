@@ -46,14 +46,30 @@
     />
   </head>
   <body>
+    <header class="game-header">
+      <h1 id="gameName">Worderly</h1>
+
+      <nav class="header-buttons">
+        <button id="helpButton" title="Help">&#x3F;</button>
+        <!-- Example: '?' icon for help -->
+        <button id="optionsButton" title="Options">&#x2699;</button>
+        <!-- Example: '⚙' icon for options -->
+        <button id="statsButton" title="Stats">
+          <i class="fas fa-chart-bar"></i>
+          <!-- Font Awesome bar chart icon -->
+        </button>
+      </nav>
+    </header>
+
     <div id="gameContainer">
       <!-- <button id="statsButton"><i class="fa-solid fa-chart-bar"></i></button> -->
       <div id="statsModal" class="modal">
         <div class="modal-content" id="statsModalContent"></div>
       </div>
 
-      <h1 id="gameName">Worderly</h1>
+      <!-- <h1 id="gameName">Worderly</h1> -->
       <div id="subhead"></div>
+
       <div
         id="completionMessage"
         class="completion-message"
@@ -259,6 +275,33 @@
           available for each letter in the word as you type.
         </p>
         <p>Happy Worderlying!</p>
+      </div>
+    </div>
+
+    <div id="optionsModal" class="modal">
+      <div class="modal-content">
+        <button class="close-modal-button"><i class="fa fa-close"></i></button>
+        <h2>Options</h2>
+        <div class="option">
+          <label for="alphabetHelperToggle">Alphabet Helper:</label>
+
+          <input type="checkbox" id="alphabetHelperToggle" />
+        </div>
+        <p class="option-description">
+          Toggles the list of letter possibilities at the bottom of the screen.
+        </p>
+        <div class="option">
+          <label for="hardModeToggle">Hard Mode:</label>
+
+          <input type="checkbox" id="hardModeToggle" />
+        </div>
+        <p class="option-description">
+          Hard mode prevents you from guessing words that are not possible
+          answers, based on the letters you've already guessed.
+        </p>
+        <div class="feedback-link">
+          <a href="mailto:worderly@hellozito.com">Send Feedback</a>
+        </div>
       </div>
     </div>
 

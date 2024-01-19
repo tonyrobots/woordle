@@ -1,10 +1,13 @@
+body {
+  font-family: "Poppins", sans-serif;
+}
+
 #gameContainer {
   max-width: 600px;
   margin: auto;
   text-align: center;
   /* font-family: "Roboto", sans-serif; */
-  font-family: "Poppins", sans-serif;
-  margin-top: -20px;
+  /* margin-top: -20px; */
 }
 h1 {
   /* set color of letters as gradient from #aaa6f4 to #eb8b60 */
@@ -14,21 +17,40 @@ h1 {
   /* end gradient */
 
   color: #555;
+  font-size: 1.5em;
   /* font-size: ; */
   /* less space below the heading */
-  margin-bottom: -10px;
+  /* margin-bottom: -10px; */
 }
 
 h3 {
   font-size: 1.2em;
   margin-bottom: -1px;
 }
+
 #subhead {
   color: #999;
   font-size: 16px;
   font-weight: 400;
   font-style: italic;
-  margin-bottom: 13px;
+  /* margin-bottom: 13px; */
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* padding: 5px; */
+  background-color: #f3f3f3; /* Example background color */
+  max-height: 50px;
+}
+
+.header-buttons button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5em;
+  margin-left: 10px;
 }
 
 #grid-container {
@@ -171,22 +193,6 @@ h3 {
   transform: scale(0.95); /* Slightly shrink key when pressed */
 }
 
-#alphabetHelper {
-  font-size: 0.8em;
-  font-weight: normal;
-  text-transform: uppercase;
-  display: flex;
-  justify-content: center;
-  font-size: medium;
-}
-
-.letter {
-  margin: 0 2px;
-  transition: background-color 0.5s ease-in-out;
-}
-
-/* Add classes for different letter statuses: correct, present, incorrect */
-
 .incorrect {
   background-color: #787c7e;
 }
@@ -213,6 +219,34 @@ h3 {
 .impossible {
   background-color: #777;
   color: #666;
+}
+
+#alphabetHelper {
+  font-size: 0.8em;
+  font-weight: normal;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  font-size: medium;
+}
+
+.letter {
+  margin: 0 2px;
+  transition: background-color 0.5s ease-in-out;
+  color: #777;
+}
+
+/* Add classes for different letter statuses: correct, present, incorrect */
+.letter.correct {
+  color: rgb(75, 164, 75);
+  background-color: #fff;
+  font-weight: bold;
+}
+.letter.impossible {
+  color: #bbb;
+  background-color: #fff;
+  font-weight: regular;
+  text-decoration: line-through;
 }
 
 /* animation stuff */
@@ -451,6 +485,33 @@ h3 {
 .fa-share-nodes {
   font-size: 20px; /* Makes the icon bigger */
   font-weight: bold; /* Makes the icon bolder */
+}
+
+.option {
+  margin: 15px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.option label {
+  margin-right: 10px;
+}
+
+.option-description {
+  color: #999;
+  font-style: italic;
+  font-size: 0.8em;
+  margin-top: -10px;
+}
+
+.feedback-link {
+  margin-top: 20px;
+  text-align: center;
+  color: #444;
+  a {
+    color: #444;
+  }
 }
 
 .completion-message {

@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
   //  variables to track game state, TODO clean up
   let gameOver = false;
   let gameWon = false;
+  let hardMode = false;
 
   // set standard settings
   let maxAttempts = 6;
@@ -105,6 +106,12 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch((err) => console.error("Failed to load valid guesses list:", err));
   }
 
+  // set state of option checkboxes
+  document.getElementById("alphabetHelperToggle").checked =
+    localStorage.getItem("alphabetHelper") === "true";
+  document.getElementById("hardModeToggle").checked =
+    localStorage.getItem("hardMode") === "true";
+
   document.addEventListener("keydown", handleKeyPress);
 
   function InitializeGameState() {
@@ -117,8 +124,13 @@ document.addEventListener("DOMContentLoaded", () => {
     gameOver = false;
     gameWon = false;
     //letter range?
-    // hide alphabet helper by default
-    document.getElementById("alphabetHelper").style.display = "none";
+    // get hardmode from localstorage, if available (default to false)
+    hardMode = JSON.parse(localStorage.getItem("hardMode")) || false;
+
+    // get alphabet helper visibility from localStorage
+    Ui.setAlphabetHelperVisibility(
+      JSON.parse(localStorage.getItem("alphabetHelper")) || false
+    );
   }
 
   function startGame() {
@@ -254,21 +266,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // function restoreGameState(gameState) {
-  //   gameOver = gameState.completed;
-  //   gameWon = gameState.won;
-  //   guesses = gameState.guesses;
-  //   statusMapHistory = gameState.statusMapHistory;
-  //   currentAttempt = guesses.length;
-
-  //   // iterate through each restored guess to fill grid with letters and feedback
-  //   guesses.forEach((guess, index) => {
-  //     currentInput = guess;
-  //     updateGrid();
-  //     updateGridStatus(guess, statusMapHistory[index]);
-  //   });
-  // }
-
   function clearGrid() {
     for (let i = 0; i < maxAttempts; i++) {
       for (let j = 0; j < letterCount; j++) {
@@ -360,10 +357,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const alphabetHelper = document.getElementById("alphabetHelper");
       if (alphabetHelper.style.display === "none") {
         Ui.displayMessage("Showing Alphabetical Helper");
-        alphabetHelper.style.display = "flex";
+        Ui.setAlphabetHelperVisibility(true);
       } else {
         Ui.displayMessage("Hiding Alphabetical Helper");
-        alphabetHelper.style.display = "none";
+        Ui.setAlphabetHelperVisibility(false);
       }
     }
     // focusCellIndex = currentInput.length;
@@ -426,6 +423,35 @@ document.addEventListener("DOMContentLoaded", () => {
         updateFocus(0);
 
         return; // Do not proceed further
+      }
+
+      // if hardmode is enabled, don't allow guesses that have been shown to be impossible based on previous guesses
+      if (hardMode) {
+        // check if guess is possible based on previous guesses
+        console.log("hardmode! checking guess: ", guess);
+        let possible = true;
+        for (let i = 0; i < letterCount; i++) {
+          // skip to next letter if the letter is correct
+          if (statusMapHistory.length > 0) {
+            if (
+              statusMapHistory[statusMapHistory.length - 1][i] === "correct"
+            ) {
+              continue;
+            }
+          }
+          // if guessed letter is not is the possible range for this letter, guess is not possible
+          if (
+            guess[i] <= letterRanges[i].min ||
+            guess[i] >= letterRanges[i].max
+          ) {
+            possible = false;
+          }
+        }
+        if (!possible) {
+          Ui.displayMessage("that's not possible", true);
+          updateFocus(0);
+          return;
+        }
       }
 
       // add guess to guesses array
@@ -638,19 +664,21 @@ document.addEventListener("DOMContentLoaded", () => {
       if (letter !== "Enter" && letter !== "⌫") {
         if (letter <= currentRange.min || letter >= currentRange.max) {
           helperLetter.classList.add("impossible"); // Highlight as impossible
+          helperLetter.classList.remove("correct");
+
           //hide this helperLetter
-          helperLetter.style.display = "none";
+          // helperLetter.style.display = "none";
         } else {
           helperLetter.classList.remove("impossible");
           helperLetter.classList.remove("correct");
           // show this helperLetter
-          helperLetter.style.display = "block";
+          // helperLetter.style.display = "block";
         }
         if (currentRange.min === currentRange.max) {
           if (currentRange.min === letter) {
             helperLetter.classList.add("correct"); // Highlight as correct
             helperLetter.classList.remove("impossible");
-            helperLetter.style.display = "block";
+            // helperLetter.style.display = "block";
           } else {
             helperLetter.classList.add("impossible"); // Highlight as impossible
           }
@@ -744,6 +772,9 @@ document.addEventListener("DOMContentLoaded", () => {
         won
       );
     }, 2500);
+
+    // save game state
+    storeGameState(endMessage, gameOver, won, guesses, statusMapHistory);
 
     // add link to play again
     // const gameUrl = window.location.href.split("?")[0]; // Base URL
@@ -870,10 +901,15 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("playAgainButton").style.display = "none";
     }
 
-    // show completion message, and set completed localStorage if daily variant
-    if (dailyWord) {
-      showCompletionMessage();
-      storeGameState(endText, gameOver, won, guesses, statusMapHistory);
+    // hide share button if game is not over
+    if (!gameOver) {
+      console.log("game is not over, hide share button");
+      document.getElementById("modalShareButton").style.display = "none";
+    }
+
+    // show completion message if daily variant
+    if (dailyWord && gameOver) {
+      showCompletionMessage(endText);
     }
 
     resultModal.style.display = "block";
@@ -963,6 +999,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("grid-container").style.display = "none"; // Hide the grid
     document.getElementById("keyboard").style.display = "none"; // Hide the keyboard
+    // hide alphabet helper
+    Ui.setAlphabetHelperVisibility(false);
   }
 
   function updateStats(isWin, guessCount, variant = "daily") {
@@ -1054,6 +1092,44 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   }
+  document.getElementById("helpButton").addEventListener("click", () => {
+    // Code to show help modal
+    document.getElementById("helpModal").style.display = "block";
+  });
+
+  document.getElementById("optionsButton").addEventListener("click", () => {
+    // Code to show options modal or functionality
+    document.getElementById("optionsModal").style.display = "block";
+  });
+
+  document.getElementById("statsButton").addEventListener("click", () => {
+    // Code to show stats modal
+    populateStatsHTML(variant);
+    showResultModal("", "", guesses, variant, gameWon);
+  });
+
+  // Handling option changes
+  document
+    .getElementById("alphabetHelperToggle")
+    .addEventListener("change", (event) => {
+      // Code to enable/disable Alphabet Helper
+      const isEnabled = event.target.checked;
+      // Implement the logic to show/hide the Alphabet Helper
+      Ui.setAlphabetHelperVisibility(isEnabled);
+      //  Saving option state
+      localStorage.setItem("alphabetHelper", isEnabled);
+    });
+
+  document
+    .getElementById("hardModeToggle")
+    .addEventListener("change", (event) => {
+      // Code to enable/disable Hard Mode
+      const isEnabled = event.target.checked;
+      // Implement the logic for Hard Mode constraints
+      hardMode = isEnabled;
+      //  Saving option state
+      localStorage.setItem("hardMode", isEnabled);
+    });
 });
 
 document.addEventListener(

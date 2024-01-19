@@ -60,3 +60,12 @@ export function getTodaysWordIndex() {
 
   return hashedDate;
 }
+
+export function setAlphabetHelperVisibility(isVisible) {
+  const alphabetHelper = document.getElementById("alphabetHelper");
+  if (isVisible) {
+    alphabetHelper.style.display = "flex";
+  } else {
+    alphabetHelper.style.display = "none";
+  }
+}
