@@ -901,14 +901,16 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("playAgainButton").style.display = "none";
     }
 
-    // hide share button if game is not over
+    // hide buttons if game is not over
     if (!gameOver) {
-      console.log("game is not over, hide share button");
-      document.getElementById("modalShareButton").style.display = "none";
+      console.log("game is not over, hide buttons");
+      Ui.setVisibilityByClass("button-row", false, "flex");
+    } else {
+      Ui.setVisibilityByClass("button-row", true, "flex");
     }
 
-    // show completion message if daily variant
-    if (dailyWord && gameOver) {
+    // show completion message if game is over and daily game
+    if (gameOver && dailyWord) {
       showCompletionMessage(endText);
     }
 

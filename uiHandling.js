@@ -69,3 +69,18 @@ export function setAlphabetHelperVisibility(isVisible) {
     alphabetHelper.style.display = "none";
   }
 }
+
+export function setVisibilityByClass(
+  className,
+  isVisible,
+  displayType = "block"
+) {
+  const elements = document.querySelectorAll(`.${className}`);
+  elements.forEach((element) => {
+    if (isVisible) {
+      element.style.display = displayType;
+    } else {
+      element.style.display = "none";
+    }
+  });
+}
