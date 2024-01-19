@@ -51,6 +51,19 @@ h3 {
   cursor: pointer;
   font-size: 1.5em;
   margin-left: 10px;
+  color: #444;
+}
+
+@media (max-width: 600px) {
+  .header-buttons button {
+    font-size: 1.2em; /* Smaller font size for small screens */
+    margin-left: 0px;
+    color: #444;
+  }
+  .header-buttons {
+    display: flex;
+    align-items: flex-end;
+  }
 }
 
 #grid-container {
@@ -439,7 +452,7 @@ h3 {
 .button-row {
   display: flex;
   justify-content: space-around; /* Adjust as needed */
-  padding: 10px 0;
+  padding: 5px 0;
 }
 
 .button {
