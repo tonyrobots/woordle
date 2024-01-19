@@ -117,6 +117,8 @@ document.addEventListener("DOMContentLoaded", () => {
     gameOver = false;
     gameWon = false;
     //letter range?
+    // hide alphabet helper by default
+    document.getElementById("alphabetHelper").style.display = "none";
   }
 
   function startGame() {
@@ -340,9 +342,29 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         updateGrid();
       }, 1000);
+    } else if (e.key === "ArrowRight" || e.key === " ") {
+      // move focus to the right if right arrow or spacebar is pressed
+      if (focusCellIndex < letterCount - 1) {
+        updateFocus(focusCellIndex + 1);
+      }
+    } else if (e.key === "ArrowLeft") {
+      // move focus to the right if right arrow is pressed
+      if (focusCellIndex > 0) {
+        updateFocus(focusCellIndex - 1);
+      }
     } else if (e.key === "?") {
       // show help modal
       document.getElementById("helpModal").style.display = "block";
+    } else if (e.key === ".") {
+      // toggle visibility of alphabet helper
+      const alphabetHelper = document.getElementById("alphabetHelper");
+      if (alphabetHelper.style.display === "none") {
+        Ui.displayMessage("Showing Alphabetical Helper");
+        alphabetHelper.style.display = "flex";
+      } else {
+        Ui.displayMessage("Hiding Alphabetical Helper");
+        alphabetHelper.style.display = "none";
+      }
     }
     // focusCellIndex = currentInput.length;
     if (focusCellIndex < letterCount) {
@@ -628,6 +650,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (currentRange.min === letter) {
             helperLetter.classList.add("correct"); // Highlight as correct
             helperLetter.classList.remove("impossible");
+            helperLetter.style.display = "block";
           } else {
             helperLetter.classList.add("impossible"); // Highlight as impossible
           }
