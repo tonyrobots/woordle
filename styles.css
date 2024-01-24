@@ -23,6 +23,9 @@ h1 {
   /* margin-bottom: -10px; */
 }
 
+#gameName {
+}
+
 h3 {
   font-size: 1.2em;
   margin-bottom: -1px;
@@ -33,7 +36,7 @@ h3 {
   font-size: 16px;
   font-weight: 400;
   font-style: italic;
-  /* margin-bottom: 13px; */
+  margin-bottom: 13px;
 }
 
 .game-header {
@@ -43,6 +46,8 @@ h3 {
   /* padding: 5px; */
   background-color: #f3f3f3; /* Example background color */
   max-height: 50px;
+  max-width: 800px;
+  margin: auto;
 }
 
 .header-buttons button {
@@ -90,7 +95,7 @@ h3 {
 .cell {
   width: 50px; /* Width of each cell */
   height: 50px; /* Height of each cell */
-  border: 2px solid #aaa;
+  border: 2px solid #d6d6d6;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -135,12 +140,7 @@ h3 {
   font-size: 16px;
   cursor: pointer;
 }
-#gameMessage {
-  margin-top: 20px;
-  font-size: 20px;
-  color: #333;
-  /* Add more styling as needed */
-}
+
 #keyboard {
   position: fixed;
   bottom: 0;
